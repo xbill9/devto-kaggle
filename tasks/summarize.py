@@ -14,7 +14,14 @@ WRONG_FILTER = {"quoted-wrong-filter", "quoted-no-filter", "correct-wrong-filter
 
 
 def row_results(run_dir: pathlib.Path) -> tuple[list[dict], int]:
-    """Per-row dicts returned by the *-row task, and the number of errored rows."""
+    """Per-row dicts returned by the *-row task, and the number of errored rows.
+
+    Task versions with `%choose` keep one run file and write the completed rows
+    to rows-<label>.json; older versions keep one run file per row.
+    """
+    for f in run_dir.glob("rows-*.json"):
+        rows = json.loads(f.read_text())
+        return rows, ROWS_PER_TASK - len(rows)
     rows, errored = [], 0
     for f in sorted(run_dir.glob("*-row-run_param_id_*.run.json")):
         d = json.loads(f.read_text())

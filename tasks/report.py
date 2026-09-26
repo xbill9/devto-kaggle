@@ -34,6 +34,10 @@ def load(task: str) -> dict:
         best = None
         for run_dir in model_dir.glob("*"):
             rows, errored = [], 0
+            # %choose versions write the completed rows to rows-<label>.json.
+            for f in run_dir.glob("rows-*.json"):
+                rows = json.loads(f.read_text())
+                errored = ROWS_PER_TASK - len(rows)
             for f in run_dir.glob("*-row-run_param_id_*.run.json"):
                 d = json.loads(f.read_text())
                 if d.get("state") == "BENCHMARK_TASK_RUN_STATE_COMPLETED" and d.get("results"):

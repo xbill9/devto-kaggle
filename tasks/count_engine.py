@@ -118,6 +118,9 @@ def summarize(runs, total: int, label: str) -> float:
     results = pd.DataFrame(list(done["result"])) if len(done) else pd.DataFrame(
         columns=["size", "phrasing", "category", "correct"])
     errored = total - len(results)
+    # %choose keeps only the scoring task's run file, so the per-question
+    # results go to their own file, which `kaggle b t download` also fetches.
+    results.to_json(f"/kaggle/working/rows-{label}.json", orient="records")
     correct = int(results["correct"].sum()) if len(results) else 0
     print(f"[{label}] correct {correct} of {total} (errored {errored})")
     if len(results):
@@ -215,3 +218,8 @@ def count_engine_row(llm, case_id, size, phrasing, ids, question, truth_where, e
 
 
 count_engine.run(kbench.llm)
+
+# %%
+# Keep only the scoring task's task and run files: the leaderboard shows
+# one task per notebook. Jupytext turns this comment into the magic.
+# %choose count_engine

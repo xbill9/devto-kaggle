@@ -32,6 +32,9 @@ NO_TOOLS = {"gpt-6-astra"}
 
 
 def completed_rows(run_dir: pathlib.Path) -> int:
+    # %choose versions write the completed rows to rows-<label>.json.
+    for f in run_dir.glob("rows-*.json"):
+        return len(json.loads(f.read_text()))
     return sum(
         json.loads(f.read_text()).get("state") == "BENCHMARK_TASK_RUN_STATE_COMPLETED"
         for f in run_dir.glob("*-row-run_param_id_*.run.json")
