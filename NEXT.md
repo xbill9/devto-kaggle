@@ -1,4 +1,4 @@
-# Where this stands and what is left (as of 2026-09-25)
+# Where this stands and what is left (as of 2026-09-27)
 
 Everything needed to finish is in this repo. Nothing depends on the machine it was started on.
 
@@ -17,15 +17,15 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 | Cover | `article/devto-cover.d50932c1.jpg` | Done, pushed, referenced by `cover_image:` |
 | Evidence | `article/evidence/` | Text files behind every figure; `report.md` is the table source |
 
-## 2026-09-26
+## 2026-09-27 (current)
 
-Pushed: `count-engine` v8, v9 (07:26 EDT) and v10 (09:24 EDT), same error, `count-rows-tool` v3, `count-python-tool` v7. All three are `Errored` because the push run's first call hit `403 ... max estimated cost ($0.0308625) exceeds your available quota`. The small `probe-max-tokens` run completed, so a passing probe does not show there is room for a push. The CLI has no quota command, and the benchmark page's "Add Models" opens nothing once all 10 models are on it. Push all three again (step 3) once the quota frees up.
+- **Leaderboard fixed.** Kaggle shows one task per notebook, picked with `%choose`; every task file now ends with `# %choose <task>`. `%choose` deletes the per-question run files, so `summarize()` writes the completed rows to `rows-<label>.json`, which `kaggle b t download` fetches and `report.py` / `summarize.py` / `pending.py` read.
+- **Versions on the benchmark:** `count-engine` v12, `count-rows-tool` v5, `count-python-tool` v9 (old versions removed). Benchmark still **Private**.
+- **Runs done:** `count-engine` v12, all 10 models. `count-rows-tool` v5, all 10, but `claude-sonnet-5-default` has 8 errored rows (needs a rerun). `count-python-tool` v9: `gemini-3.7-flash` and `gpt-oss-20b` done; the other 8 hit the daily quota on 2026-09-27 08:41 EDT and need reruns (`python3 tasks/pending.py results` lists them).
+- **Quota** behaves as a rolling 24 h window, not a midnight reset.
+- If the CLI says "Authentication required" while `kaggle auth login` says you are logged in, run `kaggle auth login --force`.
 
-## Why the leaderboard is blank
-
-Kaggle names a task and reads its result type from the **first** `@kbench.task` in the file. The pushed versions had the per-question helper (`count-engine-row`, returns a dict) first, so the task pages and leaderboard show `count-*-row` and no score, even though each run stores the float (for example Gemini 3.7 Flash engine run: `numericResult 1.0`). The files in this repo now put the scoring task first. Pushing them creates new task versions, which need new runs.
-
-## Steps for tomorrow
+## Remaining steps (1–3 are done; start at 4 with the reruns above)
 
 1. **Setup on a new PC (skip if same machine).** Ask before installing anything.
    - `pip install kaggle` into the normal Python (no venv), then `kaggle auth login` (account **xbillwork**).
@@ -49,7 +49,7 @@ Kaggle names a task and reads its result type from the **first** `@kbench.task` 
    kaggle b t run count-python-tool $M --wait
    ```
    (`gemini-3.7-flash` is covered by the push run.) Rows that hit a 429 are retried inside the task; a model with more than 6 errored rows needs its run repeated.
-5. **Download and rebuild the tables.** Update `VERSIONS` in `tasks/report.py` to the new version numbers first.
+5. **Download and rebuild the tables.** Update `VERSIONS` in `tasks/report.py` to count-engine 12, count-rows-tool 5, count-python-tool 9 first.
    ```shell
    for t in count-engine count-rows-tool count-python-tool; do kaggle b t download $t -o results; done
    python3 tasks/report.py results > article/evidence/report.md
