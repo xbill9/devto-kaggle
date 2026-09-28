@@ -4,7 +4,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 
 ## Decision
 
-**Runs are complete, the benchmark is Public, and the article matches the leaderboard. Confirm the benchmark URL loads signed out, then publish.** Deadline: 2026-10-11, 11:59 PM PDT.
+**Runs are complete, the benchmark is Public, and the article matches the leaderboard. Only publishing is left: `publish-devto.py --publish 4744048` on the author's go.** Deadline: 2026-10-11, 11:59 PM PDT.
 
 ## What exists
 
@@ -23,7 +23,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 - **Never start a run that might hit the quota** on a pair whose latest run is good: a failed run becomes the one the leaderboard shows.
 - Within the 6-row allowance: gpt-oss-20b has 1 errored Python-tool row. `pending.py` still lists Flash-Lite, the Qwen models and the private tasks; those are outside the lineup.
 - `report.md`, `scores-all-versions.txt`, `python-tool-wrong-answers.txt` and the article are rebuilt from the latest runs. Both `PENDING` lines now hold the benchmark URL; `preflight.py` passes. The dev.to draft is updated with this version (2026-09-28).
-- `check-links.py` warned that the benchmark URL is 404 while it was Private; right after it went Public it still returned 404 signed out. It must be 200 before publishing.
+- The benchmark URL returns 200 signed out (from 2026-09-28 11:25 EDT, about 15 minutes after going Public). `preflight.py --live` passes: facts, prose, article, links.
 - Steps 1–6 are done (benchmark Public, overall score switched from *Percentage of tasks passed*, which ignores numeric scores, to *Average of task scores*), and step 7 is done up to publishing. Left: `preflight.py --live` and `check-links.py` (benchmark URL must return 200 signed out), then `--publish 4744048` on the author's go.
 
 ## 2026-09-27
