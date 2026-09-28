@@ -4,7 +4,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 
 ## Decision
 
-**Published on dev.to, Medium and LinkedIn; the Kaggle benchmark is Public. Only the optional leaderboard alignment and the Advocu submit are left.** Deadline: 2026-10-11, 11:59 PM PDT.
+**Published on dev.to, Medium and LinkedIn; the Kaggle benchmark is Public. Only the optional leaderboard alignment is left.** Deadline: 2026-10-11, 11:59 PM PDT.
 
 ## What exists
 
@@ -25,7 +25,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 | Medium | https://xbill999.medium.com/count-it-or-compute-it-when-a-tool-returns-rows-the-models-that-count-them-right-spend-the-tokens-e772a07b4621, **published** |
 | Kaggle benchmark | https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it, **Public**, description published |
 | LinkedIn | https://www.linkedin.com/feed/update/urn:li:activity:7510422856250474497/, **posted** |
-| Advocu | saved as a **draft** (My activities -> Drafts); the author submits it |
+| Advocu | **submitted** (2026-09-28) |
 
 All links are in `article/devto-count-it-or-compute-it.links.txt`.
 
