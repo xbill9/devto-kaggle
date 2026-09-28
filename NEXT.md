@@ -13,7 +13,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 | Code | https://github.com/xbill9/devto-kaggle (`main`) | Current, and matches the pushed task versions |
 | Kaggle tasks | `kaggle.com/benchmarks/tasks/xbillwork/count-engine` (v12), `count-rows-tool` (v5), `count-python-tool` (v9) | **Public**, with backing notebooks. `count-python-told` and `count-in-context` exist but stay private and out of the article |
 | Kaggle benchmark | https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it | **Private**. 3 tasks, 10 models added. Leaderboard shows scores |
-| dev.to article | draft id **4744048**, source `article/devto-count-it-or-compute-it.md` | **Unpublished draft**. Two `PENDING` lines need the benchmark link |
+| dev.to article | draft id **4744048**, source `article/devto-count-it-or-compute-it.md` | **Unpublished draft**, updated 2026-09-28 with the benchmark link |
 | Cover | `article/devto-cover.d50932c1.jpg` | Done, pushed, referenced by `cover_image:` |
 | Evidence | `article/evidence/` | Text files behind every figure; `report.md` is the table source |
 
@@ -22,8 +22,9 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 - **All runs complete, and the leaderboard shows scores.** The leaderboard shows each model's *latest* run, not its best: a batch started 2026-09-27 14:00 UTC after the quota ran out had left empty latest runs for 18 pairs, so those were rerun. `report.py` and `pending.py` now judge each pair by its latest run too, so the article's tables match `kaggle b leaderboard xbillwork/count-it-or-compute-it -s` (checked for every model).
 - **Never start a run that might hit the quota** on a pair whose latest run is good: a failed run becomes the one the leaderboard shows.
 - Within the 6-row allowance: gpt-oss-20b has 1 errored Python-tool row. `pending.py` still lists Flash-Lite, the Qwen models and the private tasks; those are outside the lineup.
-- `report.md`, `scores-all-versions.txt`, `python-tool-wrong-answers.txt` and the article are rebuilt from the latest runs; `check-prose`, `check-facts`, `check-article` pass. The dev.to draft is **not yet updated** (`--update 4744048`).
-- Steps 1–5 are done. Start at step 6 (the leaderboard part of it is done: make the benchmark Public).
+- `report.md`, `scores-all-versions.txt`, `python-tool-wrong-answers.txt` and the article are rebuilt from the latest runs. Both `PENDING` lines now hold the benchmark URL; `preflight.py` passes. The dev.to draft is updated with this version (2026-09-28).
+- `check-links.py` warns that the benchmark URL is 404; that is expected while the benchmark is Private, and it must be 200 before publishing.
+- Steps 1–5 are done, and step 7 is done up to publishing. Left: make the benchmark Public (step 6), run `preflight.py --live` and `check-links.py` (benchmark URL must return 200), then `--publish 4744048` on the author's go.
 
 ## 2026-09-27
 

@@ -14,7 +14,7 @@ When the tool returned the count, nine of the ten models answered all 68 correct
 
 https://github.com/xbill9/devto-kaggle
 
-PENDING: Kaggle benchmark link
+https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it
 
 ---
 
@@ -203,7 +203,7 @@ The proxy accepted both `max_tokens` and `max_completion_tokens` on every model 
 
 #### My Benchmark
 
-- PENDING: Kaggle benchmark (the collection of the three tasks)
+- https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it (the benchmark: the three tasks and their leaderboard)
 - https://www.kaggle.com/benchmarks/tasks/xbillwork/count-engine
 - https://www.kaggle.com/benchmarks/tasks/xbillwork/count-rows-tool
 - https://www.kaggle.com/benchmarks/tasks/xbillwork/count-python-tool
