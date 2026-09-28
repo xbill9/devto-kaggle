@@ -13,7 +13,7 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "results")
-VERSIONS = {"count-engine": 12, "count-rows-tool": 5, "count-python-tool": 9}
+VERSIONS = {"count-engine": 13, "count-rows-tool": 6, "count-python-tool": 9}
 ROWS_PER_TASK = 68
 MAX_ERRORED = 6
 NAMES = {
@@ -74,6 +74,9 @@ def at(rows_err, size: int, key: str = "correct") -> str:
 data = {t: load(t) for t in VERSIONS}
 models = [m for m in NAMES if all(m in data[t] for t in VERSIONS)]
 dropped = [m for m in NAMES if m not in models]
+# Questions per list size: the most any run of any task answered at that size.
+PER_SIZE = {size: max((sum(int(r["size"]) == size for r in rows) for t in data for rows, _ in data[t].values()), default=0)
+            for size in (11, 110, 330)}
 
 print("## Engine, rows tool and Python tool, every model with all three runs\n")
 print("| Model | Engine | Rows tool | Rows tool, 330 ids | Python tool | Python tool used, 110 / 330 ids |")
@@ -89,6 +92,30 @@ print("|---|---|---|---|")
 for m in order:
     r = data["count-rows-tool"][m]
     print(f"| {NAMES[m]} | {at(r, 11)} | {at(r, 110)} | {at(r, 330)} |")
+
+print("\n## Output tokens and cost per question, engine against rows tool\n")
+print("Mean over the questions that answered; tokens and cost are as Kaggle's model proxy reports them.\n")
+print("| Model | Size | Engine correct | Engine out tokens | Engine $ | Rows correct | Rows out tokens | Rows $ |")
+print("|---|---|---|---|---|---|---|---|")
+
+
+def mean(rows, key):
+    vals = [r[key] for r in rows if r.get(key) is not None]
+    return sum(vals) / len(vals) if vals else None
+
+
+def fmt(v, spec):
+    return "—" if v is None else format(v, spec)
+
+
+for m in order:
+    for size in (11, 110, 330):
+        e = [r for r in data["count-engine"][m][0] if int(r["size"]) == size]
+        w = [r for r in data["count-rows-tool"][m][0] if int(r["size"]) == size]
+        n = PER_SIZE[size]
+        print(f"| {NAMES[m]} | {size} | {sum(bool(r['correct']) for r in e)}/{n} | {fmt(mean(e, 'out_tokens'), ',.0f')} | "
+              f"{fmt(mean(e, 'cost_usd'), '.4f')} | {sum(bool(r['correct']) for r in w)}/{n} | "
+              f"{fmt(mean(w, 'out_tokens'), ',.0f')} | {fmt(mean(w, 'cost_usd'), '.4f')} |")
 
 print("\n## Categories\n")
 for t in VERSIONS:

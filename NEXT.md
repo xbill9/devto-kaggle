@@ -17,7 +17,19 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 | Cover | `article/devto-cover.d50932c1.jpg` | Done, pushed, referenced by `cover_image:` |
 | Evidence | `article/evidence/` | Text files behind every figure; `report.md` is the table source |
 
-## 2026-09-28 (current)
+## 2026-09-28, afternoon (current): reframing around tokens
+
+- **New framing agreed with the author:** agents' tools return rows; the model must count them; it breaks past quick-test sizes with no error; whether it counts right tracks whether it spends tokens counting (reasoning), not size or price; returning the count fixes it for every model at flat cost. The article is being rewritten around this, shorter.
+- **Tasks now keep tokens and cost per question** (`in_tokens`, `out_tokens`, `cost_usd` in `rows-*.json`, from the chat's usage). Pushed as `count-engine` v13 and `count-rows-tool` v6; `count-python-tool` stays v9. `report.py` points at 13 / 6 / 9 and prints a tokens-and-cost table.
+- **Runs at v13 / v6:** done for Gemini 2.5 / 3.7 / 3.8 Flash, Gemma 4 26B, gpt-oss-20b, GPT-5.4 nano / mini. **Still needed: the three Claude models on both tasks**, deferred because the daily quota was at $6.44 of $10 on 2026-09-28 16:00 EDT:
+  ```shell
+  kaggle b t run count-engine -m claude-haiku-4-5-20251001 -m claude-sonnet-5-default -m claude-opus-5-default --wait
+  kaggle b t run count-rows-tool -m claude-haiku-4-5-20251001 -m claude-sonnet-5-default -m claude-opus-5-default --wait
+  ```
+- **Then:** on the (Public) benchmark page, point `count-engine` at v13 and `count-rows-tool` at v6 (task `⋮`, or remove and re-add), check the leaderboard, rebuild `report.md`, finish the rewrite, rerun preflight, update the dev.to draft.
+- **Benchmark page Description is still the unpublished placeholder.** Write and publish it (the problem, the three tools, the rule).
+
+## 2026-09-28, morning
 
 - **All runs complete, and the leaderboard shows scores.** The leaderboard shows each model's *latest* run, not its best: a batch started 2026-09-27 14:00 UTC after the quota ran out had left empty latest runs for 18 pairs, so those were rerun. `report.py` and `pending.py` now judge each pair by its latest run too, so the article's tables match `kaggle b leaderboard xbillwork/count-it-or-compute-it -s` (checked for every model).
 - **Never start a run that might hit the quota** on a pair whose latest run is good: a failed run becomes the one the leaderboard shows.
