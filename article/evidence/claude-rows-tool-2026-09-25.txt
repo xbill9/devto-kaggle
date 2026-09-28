@@ -1,0 +1,7 @@
+# Claude models: count-rows-tool v2 (run 2026-09-25, per-question result files) against count-engine v13 (run 2026-09-28)
+# The v6 Claude rows-tool runs of 2026-09-28 stopped on the daily quota; v2 has the same tool and the same 68 questions.
+| Model | Rows tool correct at 330 | Output tokens per question, rows tool, 11 / 110 / 330 | Rows $ per question at 330 | Engine correct at 330 | Engine output tokens at 330 | Engine $ at 330 | Rows-tool cost per question vs engine | Rows correct at 11 | Rows wrong categories |
+|---|---|---|---|---|---|---|---|---|---|
+| Claude Opus 5 | 9/21 | 133 / 223 / 579 | 0.0274 | 21/21 | 115 | 0.0114 | 2.4x | 26/26 | {'miscounted-rows': 12} |
+| Claude Sonnet 5 | 10/21 | 116 / 296 / 401 | 0.0087 | 21/21 | 95 | 0.0045 | 1.9x | 26/26 | {'miscounted-rows': 11} |
+| Claude Haiku 4.5 | 5/21 | 72 / 76 / 143 | 0.0032 | 21/21 | 71 | 0.0022 | 1.5x | 26/26 | {'miscounted-rows': 16} |

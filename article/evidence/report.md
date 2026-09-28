@@ -76,9 +76,9 @@ Mean over the questions that answered; tokens and cost are as Kaggle's model pro
 ## Left out (no complete run of all three tasks)
 
 - Gemini 3.5 Flash-Lite: complete in none
-- Claude Haiku 4.5: complete in count-python-tool
-- Claude Sonnet 5: complete in count-python-tool
-- Claude Opus 5: complete in count-python-tool
+- Claude Haiku 4.5: complete in count-engine, count-python-tool
+- Claude Sonnet 5: complete in count-engine, count-python-tool
+- Claude Opus 5: complete in count-engine, count-python-tool
 - GPT-6 Astra: complete in none
 - Qwen 3 Next 80B Instruct: complete in none
 - Qwen 3 Next 80B Thinking: complete in none

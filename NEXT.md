@@ -17,7 +17,14 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 | Cover | `article/devto-cover.d50932c1.jpg` | Done, pushed, referenced by `cover_image:` |
 | Evidence | `article/evidence/` | Text files behind every figure; `report.md` is the table source |
 
-## 2026-09-28, afternoon (current): reframing around tokens
+## 2026-09-28, evening (current)
+
+- **Article rewritten** around tool shape and tokens, no `PENDING` left, `preflight.py --live` passes, dev.to draft 4744048 updated. Not published.
+- **Runs:** `count-engine` v13 complete for all 10. `count-rows-tool` v6 complete for the 7 non-Claude models; the Claude v6 runs stopped on the daily quota (24, 6, 1 of 68), so the article takes the Claude rows-tool figures from their 2026-09-25 v2 run (same 68 questions, same tool, checked identical), in `article/evidence/claude-rows-tool-2026-09-25.txt`.
+- **Benchmark still points at** `count-engine` v12, `count-rows-tool` v5, `count-python-tool` v9, all complete. Optional once the quota frees: rerun the Claude models on `count-rows-tool` v6, then point the benchmark at v13 / v6 so its cells match the article.
+- **Benchmark page Description** is still the unpublished placeholder.
+
+## 2026-09-28, afternoon: reframing around tokens
 
 - **New framing agreed with the author:** agents' tools return rows; the model must count them; it breaks past quick-test sizes with no error; whether it counts right tracks whether it spends tokens counting (reasoning), not size or price; returning the count fixes it for every model at flat cost. The article is being rewritten around this, shorter.
 - **Tasks now keep tokens and cost per question** (`in_tokens`, `out_tokens`, `cost_usd` in `rows-*.json`, from the chat's usage). Pushed as `count-engine` v13 and `count-rows-tool` v6; `count-python-tool` stays v9. `report.py` points at 13 / 6 / 9 and prints a tokens-and-cost table.

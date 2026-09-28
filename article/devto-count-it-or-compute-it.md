@@ -1,7 +1,7 @@
 ---
 title: "Count It or Compute It: When a Tool Returns Rows, Only Models That Reason Count Them Right"
 published: false
-description: "A Kaggle benchmark of the step agents rarely test: counting what a tool returns. Ten models, 68 questions, one tool that returns the count and one that returns the rows. With the count, every model is right at a flat cost. With the rows, models that reason through the list count 330 ids right and spend 6 to 26 times the tokens doing it; models that answer straight away get 0 to 5 of 21."
+description: "A Kaggle benchmark of the step agents rarely test: counting what a tool returns. Ten models, 68 questions, one tool that returns the count and one that returns the rows. With the count, every model is right at a flat cost. With the rows, models that reason through the list count 330 ids right and spend 6 to 26 times the tokens doing it; models that answer straight away get 0 to 10 of 21."
 tags: devchallenge, kagglechallenge, ai, machinelearning
 cover_image: https://raw.githubusercontent.com/xbill9/devto-kaggle/main/article/devto-cover.d50932c1.jpg
 ---
@@ -12,7 +12,7 @@ This article provides a step by step guide to building a Kaggle benchmark for a 
 
 An agent's search, database or API tool usually hands back a list of records. When the user asks how many, the model does the counting. That step passes every quick test with a handful of rows, and nothing flags it when it goes wrong: the model sends the right query and quotes a confident number.
 
-This benchmark asks ten models the same 68 counting questions with two versions of one tool: `count_ids` returns the exact count, `list_ids` returns the matching ids. With the count, every model but one answered all 330-id questions correctly, at 35 to 451 output tokens each. With the ids, the models that reasoned through the list counted 15 to 21 of 21 lists correctly and spent 2,700 to 8,200 output tokens per question doing it. The models that answered in under 600 tokens counted 0 to 5 of 21 correctly. PENDING: Claude sentence.
+This benchmark asks ten models the same 68 counting questions with two versions of one tool: `count_ids` returns the exact count, `list_ids` returns the matching ids. With the count, every model but one answered all 330-id questions correctly, at 35 to 451 output tokens each. With the ids, the models that reasoned through the list counted 15 to 21 of 21 lists correctly and spent 2,700 to 8,200 output tokens per question doing it. The models that answered in under 600 tokens counted 0 to 10 of 21 correctly, and Claude Opus 5, the most expensive model in the lineup, was one of them.
 
 https://github.com/xbill9/devto-kaggle
 
@@ -126,7 +126,7 @@ A benchmark is created in the Kaggle web UI. On the benchmark page, **Add Tasks*
 
 #### 🔎 Tip: The Leaderboard Shows Each Model's Latest Run
 
-Each leaderboard cell shows the model's most recent run of that task, so a run that fails on the quota replaces a complete one before it. `report.py` reads the latest run for the same reason, which keeps the article's tables and the leaderboard in step.
+Each leaderboard cell shows the model's most recent run of that task, so a run that fails on the quota replaces a complete one before it. Check the quota before a run, and rerun the pair if one fails. `pending.py` lists pairs whose latest run is incomplete.
 
 ---
 
@@ -178,12 +178,14 @@ At 330 ids, the size where the models separate:
 | Gemini 3.7 Flash | 20/21 | 2,785 | 21/21 | 130 | 13.5x |
 | Gemini 3.8 Flash | 21/21 | 2,742 | 21/21 | 140 | 14.3x |
 | gpt-oss-20b | 15/21 | 2,684 | 19/21 | 451 | 5.2x |
-| Claude Opus 5 | PENDING | | | | |
-| Claude Sonnet 5 | PENDING | | | | |
-| Claude Haiku 4.5 | PENDING | | | | |
 | Gemini 2.5 Flash | 0/21 | 580 | 21/21 | 196 | 2.6x |
+| Claude Opus 5 | 9/21 | 579 | 21/21 | 115 | 2.4x |
+| Claude Sonnet 5 | 10/21 | 401 | 21/21 | 95 | 1.9x |
+| Claude Haiku 4.5 | 5/21 | 143 | 21/21 | 71 | 1.5x |
 | GPT-5.4 mini | 5/21 | 39 | 21/21 | 35 | 1.9x |
 | GPT-5.4 nano | 0/21 | 35 | 21/21 | 35 | 1.7x |
+
+The Claude rows-tool figures come from their 2026-09-25 run, which asked the same 68 questions with the same tool; their 2026-09-28 rows-tool run stopped on the daily quota. Every other figure comes from the 2026-09-28 runs.
 
 #### 1. With the Count in the Tool, Every Model Is Right at a Flat Cost
 
@@ -191,11 +193,11 @@ Every model but one answered all 21 engine questions about 330 ids correctly, an
 
 #### 2. With the Rows, Quick Tests Pass and Larger Lists Fail
 
-Five of the seven models counted all 26 questions about 11 ids correctly. PENDING: Claude. At 330 ids, two of those five, GPT-5.4 nano and mini, counted 0 and 5 of 21 correctly. None of them returned an error or a hedge: each answer was a single confident number.
+Eight of the ten models counted all 26 questions about 11 ids correctly. At 330 ids, five of those eight counted 10 or fewer of 21 correctly. None of them returned an error or a hedge: each answer was a single confident number.
 
 #### 3. Counting Takes Tokens
 
-The models split into two groups by how many tokens they spend, and model size and price do not predict the split. The models that count correctly spend more tokens as the list grows: Gemma 4 26B went from 394 output tokens per question at 11 ids to 8,153 at 330. The models that miscount spend about the same at every size: GPT-5.4 nano spent 35 tokens per question at 11, 110 and 330 ids, which leaves no room to count anything. PENDING: Claude sentence.
+The models split into two groups by how many tokens they spend, and model size and price do not predict the split. The models that count correctly spend more tokens as the list grows: Gemma 4 26B went from 394 output tokens per question at 11 ids to 8,153 at 330. The models that miscount spend about the same at every size: GPT-5.4 nano spent 35 tokens per question at 11, 110 and 330 ids, which leaves no room to count anything. Claude Opus 5, the most expensive model here, spent 579 output tokens per question at 330 ids and counted 9 of 21 correctly; Gemma 4 26B, an open-weight model, spent 8,153 and counted 20.
 
 The same models landed in the same group in every rows-tool run, three or four runs per model between 2026-09-25 and 2026-09-28. The order inside a group moves by a few questions between runs.
 
@@ -263,9 +265,9 @@ The results were:
 
 - 🟢 With the count in the tool, every model but gpt-oss-20b answered all 330-id questions correctly, at 35 to 451 output tokens per question.
 - ⚠️ With the rows, the models that reasoned counted 15 to 21 of 21 lists of 330 correctly and spent 2,700 to 8,200 output tokens per question.
-- ❌ The models that answered straight away counted 0 to 5 of 21 correctly, with no error to show it.
+- ❌ The models that answered straight away counted 0 to 10 of 21 correctly, with no error to show it, Claude Opus 5 among them.
 
-Each model ran each task on Kaggle's model proxy with its default settings and output capped at 8,192 tokens; the engine and rows-tool figures come from runs on 2026-09-28 and 2026-09-29, the Python-tool figures from 2026-09-28, and the token-cap result from earlier in-context runs with lists of 1,100 ids.
+Each model ran each task on Kaggle's model proxy with its default settings and output capped at 8,192 tokens; the engine and rows-tool figures come from runs on 2026-09-28, apart from the Claude rows-tool figures from 2026-09-25, the Python-tool figures from 2026-09-28, and the token-cap result from earlier in-context runs with lists of 1,100 ids.
 
 The strategy for benchmarking counting across 10 models was validated with an incremental step by step approach.
 
