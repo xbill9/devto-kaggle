@@ -1,0 +1,1 @@
+hook = My entry for the DEV Kaggle Benchmarking Challenge: when an agent's tool returns rows, only the models that spend tokens count them right.

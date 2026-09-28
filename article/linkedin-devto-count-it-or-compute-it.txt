@@ -1,0 +1,14 @@
+My entry for the DEV Kaggle Benchmarking Challenge: when an agent's tool returns rows, only the models that spend tokens count them right.
+
+A Kaggle benchmark of the step agents rarely test: counting what a tool returns. Ten models, 68 questions, one tool that returns the count and one that returns the rows. With the count, every model is right at a flat cost. With the rows, models that reason through the list count 330 ids right and spend 6 to 26 times the tokens doing it; models that answer straight away get 0 to 10 of 21.
+
+What is in it:
+
+- 🟢 With the count in the tool, every model but gpt-oss-20b answered all 330-id questions correctly.
+- ⚠️ With the rows, the models that spent 2,700 to 8,200 output tokens per question counted 15 to 21 of 21 lists of 330 correctly.
+- ❌ The models that answered in under 600 tokens counted 0 to 10 of 21, Claude Opus 5 among them, with no error to show it.
+
+dev.to: https://dev.to/gde/count-it-or-compute-it-when-a-tool-returns-rows-the-models-that-count-them-right-spend-the-tokens-2hae
+Benchmark on Kaggle: https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it
+The challenge: https://dev.to/challenges/kaggle-2026-09-23
+Source: https://github.com/xbill9/devto-kaggle
