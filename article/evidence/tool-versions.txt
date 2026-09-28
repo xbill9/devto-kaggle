@@ -1,0 +1,2 @@
+$ kaggle --version  # 2026-09-28
+Kaggle CLI 2.2.4
