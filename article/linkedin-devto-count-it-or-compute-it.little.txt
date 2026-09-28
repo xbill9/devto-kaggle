@@ -9,6 +9,7 @@ What is in it:
 - ❌ The models that answered in under 600 tokens counted 0 to 10 of 21, Claude Opus 5 among them, with no error to show it.
 
 dev.to: https://dev.to/gde/count-it-or-compute-it-when-a-tool-returns-rows-the-models-that-count-them-right-spend-the-tokens-2hae
+Medium: https://xbill999.medium.com/count-it-or-compute-it-when-a-tool-returns-rows-the-models-that-count-them-right-spend-the-tokens-e772a07b4621
 Benchmark on Kaggle: https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it
 The challenge: https://dev.to/challenges/kaggle-2026-09-23
 Source: https://github.com/xbill9/devto-kaggle
