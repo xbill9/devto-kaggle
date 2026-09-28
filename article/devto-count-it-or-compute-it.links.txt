@@ -4,3 +4,4 @@ medium    = https://xbill999.medium.com/count-it-or-compute-it-when-a-tool-retur
 benchmark = https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it
 challenge = https://dev.to/challenges/kaggle-2026-09-23
 repo      = https://github.com/xbill9/devto-kaggle
+linkedin  = https://www.linkedin.com/feed/update/urn:li:activity:7510422856250474497/

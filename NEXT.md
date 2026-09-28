@@ -4,7 +4,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 
 ## Decision
 
-**Runs are complete, the benchmark is Public, and the article matches the leaderboard. Only publishing is left: `publish-devto.py --publish 4744048` on the author's go.** Deadline: 2026-10-11, 11:59 PM PDT.
+**Published on dev.to, Medium and LinkedIn; the Kaggle benchmark is Public. Only the optional leaderboard alignment and the Advocu submit are left.** Deadline: 2026-10-11, 11:59 PM PDT.
 
 ## What exists
 
@@ -17,7 +17,21 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 | Cover | `article/devto-cover.d50932c1.jpg` | Done, pushed, referenced by `cover_image:` |
 | Evidence | `article/evidence/` | Text files behind every figure; `report.md` is the table source |
 
-## 2026-09-28, evening (current)
+## 2026-09-28, night (current): published everywhere
+
+| Where | URL / state |
+|---|---|
+| dev.to (challenge entry) | https://dev.to/gde/count-it-or-compute-it-when-a-tool-returns-rows-the-models-that-count-them-right-spend-the-tokens-2hae, **published** |
+| Medium | https://xbill999.medium.com/count-it-or-compute-it-when-a-tool-returns-rows-the-models-that-count-them-right-spend-the-tokens-e772a07b4621, **published** |
+| Kaggle benchmark | https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it, **Public**, description published |
+| LinkedIn | https://www.linkedin.com/feed/update/urn:li:activity:7510422856250474497/, **posted** |
+| Advocu | saved as a **draft** (My activities -> Drafts); the author submits it |
+
+All links are in `article/devto-count-it-or-compute-it.links.txt`.
+
+**Optional, open:** once the daily quota frees, rerun the three Claude models on `count-rows-tool` v6, then point the benchmark at `count-engine` v13 and `count-rows-tool` v6 so its cells match the article (it shows v12 / v5 / v9 today, all complete).
+
+## 2026-09-28, evening
 
 - **Article rewritten** around tool shape and tokens, no `PENDING` left, `preflight.py --live` passes, dev.to draft 4744048 updated. Not published.
 - **Runs:** `count-engine` v13 complete for all 10. `count-rows-tool` v6 complete for the 7 non-Claude models; the Claude v6 runs stopped on the daily quota (24, 6, 1 of 68), so the article takes the Claude rows-tool figures from their 2026-09-25 v2 run (same 68 questions, same tool, checked identical), in `article/evidence/claude-rows-tool-2026-09-25.txt`.
