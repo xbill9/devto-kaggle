@@ -117,6 +117,17 @@ for m in order:
               f"{fmt(mean(e, 'cost_usd'), '.4f')} | {sum(bool(r['correct']) for r in w)}/{n} | "
               f"{fmt(mean(w, 'out_tokens'), ',.0f')} | {fmt(mean(w, 'cost_usd'), '.4f')} |")
 
+print("\n## At 330 ids: rows tool against engine\n")
+print("| Model | Rows tool correct | Output tokens per question, rows tool | Engine correct | Output tokens per question, engine | Rows-tool cost per question vs engine |")
+print("|---|---|---|---|---|---|")
+for m in sorted(order, key=lambda m: -(mean([r for r in data["count-rows-tool"][m][0] if int(r["size"]) == 330], "out_tokens") or 0)):
+    e = [r for r in data["count-engine"][m][0] if int(r["size"]) == 330]
+    w = [r for r in data["count-rows-tool"][m][0] if int(r["size"]) == 330]
+    ce, cw = mean(e, "cost_usd"), mean(w, "cost_usd")
+    ratio = f"{cw / ce:.1f}x" if ce and cw else "—"
+    print(f"| {NAMES[m]} | {sum(bool(r['correct']) for r in w)}/{PER_SIZE[330]} | {fmt(mean(w, 'out_tokens'), ',.0f')} | "
+          f"{sum(bool(r['correct']) for r in e)}/{PER_SIZE[330]} | {fmt(mean(e, 'out_tokens'), ',.0f')} | {ratio} |")
+
 print("\n## Categories\n")
 for t in VERSIONS:
     total = collections.Counter()

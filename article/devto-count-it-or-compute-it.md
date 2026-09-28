@@ -1,16 +1,18 @@
 ---
-title: "Count It or Compute It: A Tool That Returns Rows Leaves LLMs Miscounting"
+title: "Count It or Compute It: When a Tool Returns Rows, Only Models That Reason Count Them Right"
 published: false
-description: "A Kaggle benchmark that asks 10 models from Google, Anthropic and OpenAI the same 68 counting questions three ways: quote an exact count from a query tool, count the rows a query tool returns, or use a Python tool. Every expected answer is computed by code, and every filter a model sends is graded."
+description: "A Kaggle benchmark of the step agents rarely test: counting what a tool returns. Ten models, 68 questions, one tool that returns the count and one that returns the rows. With the count, every model is right at a flat cost. With the rows, models that reason through the list count 330 ids right and spend 6 to 26 times the tokens doing it; models that answer straight away get 0 to 5 of 21."
 tags: devchallenge, kagglechallenge, ai, machinelearning
 cover_image: https://raw.githubusercontent.com/xbill9/devto-kaggle/main/article/devto-cover.d50932c1.jpg
 ---
 
 *This is a submission for the [Kaggle Benchmarking Challenge](https://dev.to/challenges/kaggle-2026-09-23)*
 
-This article provides a step by step guide to building a counting benchmark on Kaggle with the Kaggle CLI, and reports what it measured across ten models. Ask a model how many ids in a list are 10 or more, and whether it gets the answer right depends on who does the counting. This benchmark gives ten models the same 68 questions with three different tools: one that returns the exact count, one that returns the matching rows, and a Python interpreter.
+This article provides a step by step guide to building a Kaggle benchmark for a step every agent performs and few people test: counting what a tool returns.
 
-When the tool returned the count, nine of the ten models answered all 68 correctly. When the tool returned the rows, no answer rested on a wrong filter, and scores still ranged from 68 of 68 down to 29: 131 of the 136 misses were miscounts of the correct rows. At 330 ids, Claude Sonnet 5 counted 6 of 21 correctly and Gemma 4 26B counted 20 of 21.
+An agent's search, database or API tool usually hands back a list of records. When the user asks how many, the model does the counting. That step passes every quick test with a handful of rows, and nothing flags it when it goes wrong: the model sends the right query and quotes a confident number.
+
+This benchmark asks ten models the same 68 counting questions with two versions of one tool: `count_ids` returns the exact count, `list_ids` returns the matching ids. With the count, every model but one answered all 330-id questions correctly, at 35 to 451 output tokens each. With the ids, the models that reasoned through the list counted 15 to 21 of 21 lists correctly and spent 2,700 to 8,200 output tokens per question doing it. The models that answered in under 600 tokens counted 0 to 5 of 21 correctly. PENDING: Claude sentence.
 
 https://github.com/xbill9/devto-kaggle
 
@@ -28,7 +30,7 @@ https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it
 
 #### Step 1 — Check the Questions Locally
 
-Every question is generated in code, and its expected count comes from running a filter over the ids, so no answer is written by hand. `check.py` builds all 68 questions and checks them with no model calls and no Kaggle library:
+Every question is generated in code, and its expected count comes from running a filter over the ids. `check.py` builds all 68 questions with no model calls and no Kaggle library:
 
 ```shell
 python3 tasks/check.py
@@ -42,7 +44,7 @@ ok: 68 rows per task, by size {11: 26, 110: 21, 330: 21}
 
 #### Step 2 — Push Each Task
 
-Each file in `tasks/` is one Kaggle task and stands alone on Kaggle. The scoring task, which returns the share of questions answered correctly, is the first `@kbench.task` in the file, because Kaggle names the task and reads its score from the first one it finds. A second task answers one question and is run once per question:
+Each file in `tasks/` is one Kaggle task. The first `@kbench.task` in the file returns the share of questions answered correctly, because Kaggle names the task and reads its score from the first one it finds. A second task answers one question and runs once per question:
 
 ```python
 @kbench.task(name="count-engine")
@@ -52,7 +54,7 @@ def count_engine(llm) -> float:
     return summarize(runs, len(ROWS), "engine")
 ```
 
-The file ends with `# %choose count_engine`, which keeps only the scoring task on the leaderboard. The push slug must match the task name:
+Each question's result keeps the answer, every filter the model sent, and the tokens and cost Kaggle's model proxy reported for it. The push slug must match the task name:
 
 ```shell
 kaggle b t push count-engine -f tasks/count_engine.py --wait
@@ -61,13 +63,10 @@ kaggle b t status count-engine
 
 ```plaintext
 Task:     count-engine
-Version:  12
+Version:  13
 Status:   Completed
-Created:  2026-09-26 22:23:30
-Public:   True
+Created:  2026-09-28 16:11:45
 ```
-
-Each push also runs the task once on Kaggle's default model. `count-rows-tool` and `count-python-tool` are pushed the same way.
 
 ---
 
@@ -76,15 +75,15 @@ Each push also runs the task once on Kaggle's default model. `count-rows-tool` a
 `kaggle b auth -y` fetches the short-lived key for Kaggle's model proxy, and `kaggle b t models` lists the model slugs. A run takes one `-m` per model:
 
 ```shell
-kaggle b t run count-python-tool -m gemini-2.5-flash -m gemini-3.8-flash -m claude-haiku-4-5-20251001 -m claude-sonnet-5-default -m claude-opus-5-default -m gpt-5.4-nano-2026-03-17 -m gpt-5.4-mini-2026-03-17 --wait
+kaggle b t run count-rows-tool -m gemini-2.5-flash -m gemini-3.8-flash -m gemma-4-26b-a4b-it -m gpt-oss-20b -m gpt-5.4-nano-2026-03-17 -m gpt-5.4-mini-2026-03-17 --wait
 ```
 
 ```plaintext
+All runs completed:
   gpt-5.4-mini-2026-03-17: COMPLETED
   gpt-5.4-nano-2026-03-17: COMPLETED
-  claude-opus-5-default: COMPLETED
-  claude-sonnet-5-default: COMPLETED
-  claude-haiku-4-5-20251001: COMPLETED
+  gpt-oss-20b: COMPLETED
+  gemma-4-26b-a4b-it: COMPLETED
   gemini-3.8-flash: COMPLETED
   gemini-2.5-flash: COMPLETED
 ```
@@ -99,13 +98,11 @@ Kaggle's model proxy reserves the worst-case cost of a call, based on the output
 llm.prompt(prompt, schema=int, extra_api_params={"max_completion_tokens": 8192})
 ```
 
-The proxy accepted both `max_tokens` and `max_completion_tokens` on every model checked.
-
 ---
 
 #### Step 4 — Download the Runs and Build the Tables
 
-Each model's run carries the per-question results the task returned: size, phrasing, answer, category and every filter or piece of code the model sent. `report.py` builds every table in this article from those files:
+`report.py` builds every table in this article from the downloaded runs, including the tokens and cost per question:
 
 ```shell
 for t in count-engine count-rows-tool count-python-tool; do kaggle b t download $t -o results; done
@@ -113,75 +110,47 @@ python3 tasks/report.py results
 ```
 
 ```plaintext
-## Filters sent by rows-tool and engine answers that were wrong
-
-- count-engine: 0 answers built on a wrong filter
-- count-rows-tool: 0 answers built on a wrong filter
+| Model | Size | Engine correct | Engine out tokens | Engine $ | Rows correct | Rows out tokens | Rows $ |
+|---|---|---|---|---|---|---|---|
+| Gemini 3.8 Flash | 330 | 21/21 | 140 | 0.0010 | 21/21 | 2,742 | 0.0146 |
+| GPT-5.4 nano | 330 | 21/21 | 35 | 0.0002 | 0/21 | 35 | 0.0003 |
 ```
-
-`pending.py` prints the `kaggle b t run` commands still needed for the lineup.
 
 ---
 
 #### Step 5 — Group the Tasks Into a Benchmark
 
-A benchmark is created in the Kaggle web UI; the CLI pushes and runs tasks only. On the benchmark page, **Add Tasks** adds the three tasks and **Add Models** the ten models. Under **Settings**, set the overall score to *Average of task scores*: the default, *Percentage of tasks passed*, ignores tasks that return a number. Setting the visibility to *Public* is permanent. The leaderboard is then readable from the CLI:
-
-```shell
-kaggle b leaderboard xbillwork/count-it-or-compute-it -s
-```
-
-```plaintext
-Model             (Overall)           count-engine                              count-python-tool                              count-rows-tool
-----------------  ------------------  ----------------------------------------  ---------------------------------------------  -------------------------------------------
-Gemini 3.7 Flash  1                   1                                         1                                              1
-Gemini 3.8 Flash  1                   1                                         1                                              1
-Gemma 4 26B A4B   0.9950980392156862  1                                         1                                              0.9852941176470589
-```
+A benchmark is created in the Kaggle web UI. On the benchmark page, **Add Tasks** adds the tasks and **Add Models** the models. Under **Settings**, set the overall score to *Average of task scores*: the default, *Percentage of tasks passed*, ignores tasks that return a number. Setting the visibility to *Public* is permanent.
 
 ---
 
 #### 🔎 Tip: The Leaderboard Shows Each Model's Latest Run
 
-Each leaderboard cell shows the model's most recent run of that task, so a run that fails on the quota replaces a complete one before it. `report.py` and `pending.py` read the latest run for the same reason, which keeps the article's tables and the leaderboard in step.
+Each leaderboard cell shows the model's most recent run of that task, so a run that fails on the quota replaces a complete one before it. `report.py` reads the latest run for the same reason, which keeps the article's tables and the leaderboard in step.
 
 ---
 
 #### What I Benchmarked
 
-With the tasks on Kaggle, here is what they measure. The itch is eleven ids.
+With the tasks on Kaggle, here is what they measure. The itch is eleven ids:
 
 ```plaintext
 0, 2, 3, 20, 21, 22, 23, 10, 11, 12, 13
 ```
 
-How many of them are 10 or more? The answer is 8, and every model here gets it. Eleven ids say nothing about three hundred, and the tools models are handed in practice rarely do the counting for them: a search or a database query hands back rows, and the model is left to count what came back.
+How many are 10 or more? The answer is 8, and every model here gets it. Eleven ids say nothing about three hundred, and eleven is about the size of the lists most quick tests use.
 
-So the benchmark asks the same question with three tools:
+The benchmark holds everything fixed except who does the arithmetic:
 
-| Task | What the model gets | Who does the arithmetic |
+| Task | What the model gets | Who counts |
 |---|---|---|
-| `count-engine` | A `count_ids(where)` tool that returns the exact count, minimum and maximum | The engine; the model writes the filter |
-| `count-rows-tool` | A `list_ids(where)` tool that returns the matching ids | The model counts the rows the tool returns |
-| `count-python-tool` | Every id in the prompt, plus `run_python` with `ids` already defined | The model decides whether to compute it |
+| `count-engine` | `count_ids(where)`, which returns the exact count, minimum and maximum | The tool |
+| `count-rows-tool` | `list_ids(where)`, which returns the matching ids | The model, from the returned list |
+| `count-python-tool` | Every id in the prompt, plus `run_python` with `ids` already defined | The model's code, if it writes any |
 
-The first two tasks keep the ids out of the prompt, so the only difference between them is whether the tool returns a number or a list. Both log every filter the model sends and grade it by the ids it selects, so a wrong answer is traced to either a wrong filter or a wrong count.
+In the first two tasks the ids never appear in the prompt, so the only difference is whether the tool returns a number or a list. Both tasks check every filter the model sends by the ids it selects, so `id > 9` counts as right for "10 or more", and every wrong answer is traced to either a wrong query or a wrong count.
 
-Each task asks 68 questions: lists of 11, 110 and 330 ids, seven English phrasings of the threshold ("10 or more", "no less than", "under", "between 5 and 9 inclusive" and so on), three seeds each, and the original eleven ids five times. Every expected answer is computed by code.
-
-Each phrasing has a filter that means the same thing, and the expected count comes from running it. Every threshold is an id in the list, so `>` and `>=` always give different answers.
-
-| Phrasing | Example | Filter |
-|---|---|---|
-| or-more | 10 or more | `id >= 10` |
-| at-least | at least 10 | `id >= 10` |
-| no-less-than | no less than 10 | `id >= 10` |
-| more-than | more than 10 | `id > 10` |
-| under | under 10 | `id < 10` |
-| at-most | at most 10 | `id <= 10` |
-| between-inclusive | between 5 and 9 inclusive | `id >= 5 and id <= 9` |
-
-A wrong filter returns an exact number with a cited source, which is harder to catch than a miscount. The engine and rows tasks check each filter by the ids it selects, so `id > 9` counts as right for "10 or more". Each answer lands in one category: `correct`, `miscounted-rows`, `quoted-wrong-filter`, `wrong-filter`, `not-quoted` (had the tool's number, answered something else) or `no-call`.
+Each task asks 68 questions: lists of 11, 110 and 330 ids, seven phrasings of the threshold ("10 or more", "no less than", "under", "between 5 and 9 inclusive" and so on), three seeds each, and the original eleven ids five times. Every threshold is an id in the list, so `>` and `>=` always give different answers.
 
 ---
 
@@ -193,67 +162,60 @@ A wrong filter returns an exact number with a cited source, which is harder to c
 | Anthropic | Claude Haiku 4.5, Claude Sonnet 5, Claude Opus 5 |
 | OpenAI | GPT-5.4 nano, GPT-5.4 mini, gpt-oss-20b |
 
-The lineup takes a small, a mid-sized and a large model from each vendor, because the question is whether model size fixes counting or only hides it. Gemma 4 and gpt-oss are the open-weight models from the same two vendors, so the comparison covers both what a lab hosts and what anyone can run.
+The lineup takes a small, a mid-sized and a large model from each vendor, plus the open-weight models from Google and OpenAI, so the comparison covers price, size and what anyone can run. Each model runs with the settings Kaggle's model proxy serves it with. Some of those reason before answering and some answer straight away, and that setting decides the result.
 
-Four models from the planned lineup have no complete run of all three tasks. GPT-6 Astra is refused function tools by Kaggle's model proxy (`Function tools with reasoning_effort are not supported for gpt-6-astra in /v1/chat/completions`). Gemini 3.5 Flash-Lite, Qwen 3 Next 80B Instruct and Qwen 3 Next 80B Thinking returned `429 The model is currently experiencing heavy load` or `503 The requested model is currently not reachable` on most calls.
+GPT-6 Astra is refused function tools by the proxy (`Function tools with reasoning_effort are not supported for gpt-6-astra in /v1/chat/completions`). Gemini 3.5 Flash-Lite and both Qwen 3 Next 80B models returned `429` or `503` on most calls.
 
 ---
 
 #### Findings
 
-| Model | Engine | Rows tool | Rows tool, 330 ids | Python tool |
-|---|---|---|---|---|
-| Gemini 3.7 Flash | 🥇 68/68 | 🥇 68/68 | 21/21 | 🥇 68/68 |
-| Gemini 3.8 Flash | 🥇 68/68 | 🥇 68/68 | 21/21 | 🥇 68/68 |
-| Gemma 4 26B A4B | 🥇 68/68 | 🥈 67/68 | 20/21 | 🥇 68/68 |
-| gpt-oss-20b | 54/68 | 60/68 | 18/21 | 56/68 |
-| Claude Opus 5 | 🥇 68/68 | 55/68 | 8/21 | 🥇 68/68 |
-| Claude Haiku 4.5 | 🥇 68/68 | 53/68 | 6/21 | 🥇 68/68 |
-| Claude Sonnet 5 | 🥇 68/68 | 53/68 | 6/21 | 🥇 68/68 |
-| GPT-5.4 mini | 🥇 68/68 | 48/68 | 2/21 | 64/68 |
-| Gemini 2.5 Flash | 🥇 68/68 | 43/68 | 3/21 | 37/68 |
-| GPT-5.4 nano | 🥇 68/68 | 29/68 | 0/21 | 🥇 68/68 |
+At 330 ids, the size where the models separate:
 
-One Python-tool question for gpt-oss-20b returned a proxy error and counts as wrong.
+| Model | Rows tool correct | Output tokens per question, rows tool | Engine correct | Output tokens per question, engine | Rows-tool cost per question vs engine |
+|---|---|---|---|---|---|
+| Gemma 4 26B A4B | 20/21 | 8,153 | 21/21 | 311 | 18.6x |
+| Gemini 3.7 Flash | 20/21 | 2,785 | 21/21 | 130 | 13.5x |
+| Gemini 3.8 Flash | 21/21 | 2,742 | 21/21 | 140 | 14.3x |
+| gpt-oss-20b | 15/21 | 2,684 | 19/21 | 451 | 5.2x |
+| Claude Opus 5 | PENDING | | | | |
+| Claude Sonnet 5 | PENDING | | | | |
+| Claude Haiku 4.5 | PENDING | | | | |
+| Gemini 2.5 Flash | 0/21 | 580 | 21/21 | 196 | 2.6x |
+| GPT-5.4 mini | 5/21 | 39 | 21/21 | 35 | 1.9x |
+| GPT-5.4 nano | 0/21 | 35 | 21/21 | 35 | 1.7x |
 
-#### 1. When the Engine Counts, the Answer Is Right
+#### 1. With the Count in the Tool, Every Model Is Right at a Flat Cost
 
-Nine of the ten models answered all 68 engine questions correctly, and none of the 680 answers rested on a filter that selected the wrong ids. Turning "no less than 244" into `id >= 244` is a task these models do reliably. The one exception, gpt-oss-20b, received the exact count and answered with a different number 14 times, such as 0 where the count was 220.
+Every model but one answered all 21 engine questions about 330 ids correctly, and each model's output tokens stayed about the same from 11 ids to 330. Turning "no less than 244" into `id >= 244` and quoting the number back is something every model here does reliably. The exception, gpt-oss-20b, answered 5 of 68 engine questions with a number other than the count it was given, all of them 0, 1 or 2, and answered once without calling the tool.
 
-#### 2. A Tool That Returns Rows Leaves the Model Miscounting
+#### 2. With the Rows, Quick Tests Pass and Larger Lists Fail
 
-The models wrote correct filters for the rows tool too, and it returned the matching ids. Of the 136 misses, 131 counted the right rows wrong, 4 never called the tool, 1 gave no readable answer, and none rested on a wrong filter.
+Five of the seven models counted all 26 questions about 11 ids correctly. PENDING: Claude. At 330 ids, two of those five, GPT-5.4 nano and mini, counted 0 and 5 of 21 correctly. None of them returned an error or a hedge: each answer was a single confident number.
 
-| Model | 11 ids | 110 ids | 330 ids |
-|---|---|---|---|
-| Gemini 3.7 Flash | 26/26 | 21/21 | 21/21 |
-| Gemini 3.8 Flash | 26/26 | 21/21 | 21/21 |
-| Gemma 4 26B A4B | 26/26 | 21/21 | 20/21 |
-| gpt-oss-20b | 24/26 | 18/21 | 18/21 |
-| Claude Opus 5 | 26/26 | 21/21 | 8/21 |
-| Claude Haiku 4.5 | 26/26 | 21/21 | 6/21 |
-| Claude Sonnet 5 | 26/26 | 21/21 | 6/21 |
-| GPT-5.4 mini | 26/26 | 20/21 | 2/21 |
-| Gemini 2.5 Flash | 24/26 | 16/21 | 3/21 |
-| GPT-5.4 nano | 26/26 | 3/21 | 0/21 |
+#### 3. Counting Takes Tokens
 
-Eight of the ten models counted all 26 questions about 11 ids correctly, which is the size most quick tests use. The spread opens at 110 ids and is widest at 330, and it does not follow model size: Claude Opus 5 counted 8 of 330-id lists correctly, Claude Haiku 4.5 and Sonnet 5 counted 6, and Gemma 4 26B, a 26B open-weight model, counted 20 of 21.
+The models split into two groups by how many tokens they spend, and model size and price do not predict the split. The models that count correctly spend more tokens as the list grows: Gemma 4 26B went from 394 output tokens per question at 11 ids to 8,153 at 330. The models that miscount spend about the same at every size: GPT-5.4 nano spent 35 tokens per question at 11, 110 and 330 ids, which leaves no room to count anything. PENDING: Claude sentence.
 
-#### 3. Given Python, Most Models Compute, and Three Ways to Still Miss
+The same models landed in the same group in every rows-tool run, three or four runs per model between 2026-09-25 and 2026-09-28. The order inside a group moves by a few questions between runs.
 
-Eight of the ten models called the Python tool on every question about 110 and 330 ids. Three kinds of miss remain.
+Counting right by reasoning costs 5 to 19 times what the engine costs for the same answer.
 
-- **Skipping the tool.** Gemini 2.5 Flash called it on 1 of 21 questions about 110 ids and none of 21 about 330, answered from reading instead, and scored 37 of 68. It showed the same pattern in two runs of the 1,100-id configuration. gpt-oss-20b skipped the tool on 15 of the 67 questions it answered and miscounted 6 of them.
-- **Code with no output.** GPT-5.4 mini missed 4 questions after running code such as `sum(1 for x in ids if x > 622)` with no `print()`. The tool runs `python -c`, so it returned nothing, and the model answered anyway: 0 where the answer was 190.
-- **Ignoring the output.** gpt-oss-20b missed 5 questions after running code that printed a count, then answered with a different number, such as 0 after `count = sum(1 for x in ids if x >= 683)` and `print(count)`, where the answer was 160. It did the same thing to the engine's count 14 times.
+#### 4. The Query Was Right Every Time
 
-#### 4. A Reasoning Budget Turns Counting Into Guessing
+No answer on either task rested on a filter that selected the wrong ids. Every miss on the rows tool was the model counting the correct list wrong, apart from 3 answers given without calling the tool and 1 that could not be read as a number. The failure is in the arithmetic.
 
-A 1,100-id configuration of the in-context task put every id in the prompt and had Gemini 2.5 Flash and 3.7 Flash count them by reading. They spent an average of 9,755 to 19,897 output tokens per question counting through the list. With output capped at 8,192 tokens, Gemini 3.7 Flash counted 1 of 21 lists of 1,100 ids correctly, against 19 and 15 of 21 without the cap. It kept answering when the budget ran out, so the cut-off shows up as a wrong number with no error.
+#### 5. Python Is a Fix Only When the Model Uses It
+
+With every id in the prompt and a Python tool available, 7 of 10 models scored 68 of 68. Gemini 2.5 Flash called the tool on 1 of 42 questions about 110 and 330 ids and counted by reading instead, scoring 37 of 68. GPT-5.4 mini missed 4 questions by running code with no `print()` and answering anyway.
+
+#### 6. A Token Cap Turns Counting Into Guessing
+
+In an earlier configuration with 1,100 ids in the prompt and no tools, Gemini 3.7 Flash counted 19 and then 15 of 21 lists correctly. With output capped at 8,192 tokens it counted 1 of 21. It kept answering when the budget ran out, so the cap shows up as a wrong number with no error.
 
 #### What It Changed About How I Think About These Models
 
-The question to ask of a tool is whether it finishes the arithmetic. Every model here wrote correct filters; most of them cannot count what the filter returns once the list is a few hundred long, and the largest models are among them. A tool that returns rows looks like a complete answer and leaves the hardest part to the model. The fix belongs in the tool: return the count, the minimum and the maximum, and let the model quote them.
+Counting a list is work the model does in tokens, and a model that answers straight away has not done it. A tool that returns rows moves that work onto the model and makes its accuracy depend on a setting the caller may never have looked at. The count belongs in the tool: return the count, the minimum and the maximum, and every model in this lineup answers correctly at a fraction of the tokens.
 
 ---
 
@@ -261,27 +223,26 @@ The question to ask of a tool is whether it finishes the arithmetic. Every model
 
 | | Engine | Rows tool | Python tool |
 |---|---|---|---|
-| Who counts | The engine | The model, from the returned rows | The model's code, if it runs any |
-| What went wrong | Quoting a number other than the count | Miscounting the right rows | Skipping the tool, no `print()`, ignoring the output |
-| Models at 68/68 | 9 of 10 | 2 of 10 | 7 of 10 |
+| Who counts | The tool | The model, from the returned list | The model's code, if it writes any |
+| Output tokens per question at 330 ids | 35 to 451 | 35 to 8,153 | — |
+| What went wrong | Quoting a number other than the count | Miscounting the right list | Skipping the tool, no `print()` |
 | Answers built on a wrong filter | 0 | 0 | — |
 
 ---
 
 #### So, Which One?
 
-- 🟢 **Engine** — return the count. Nine of ten models were right on every question, and the one failure mode left is visible in the answer.
-- ⚠️ **Python tool** — reliable for most models, but it depends on the model choosing to use it, printing the result and quoting it.
-- ❌ **Rows tool** — the model does the counting, and most models miscount a few hundred rows.
+- 🟢 **Engine** — put the count, minimum and maximum in the tool. Every model is right at a flat cost.
+- ⚠️ **Python tool** — reliable when the model uses it, prints the result and quotes it.
+- ❌ **Rows tool** — correct only with a model that reasons through the list, at 5 to 19 times the cost per question.
 
 ---
 
 #### What I'd Measure Next
 
-- **In-context counting at 330 ids across the lineup.** Every id in the prompt and no tools, as the baseline for counting by reading. The earlier Gemini runs at 1,100 ids are the only measurement of it here.
-- **Telling the model to use the tool.** A variant of the Python-tool task with one added sentence, to see whether it brings Gemini 2.5 Flash's tool use at 330 ids up to where it is at 11.
-- **Harder filters.** "At least 10 but under 20", "other than those under 10", "outside 5 to 9". No model sent a wrong filter for a single threshold; compound and negated ones are where a wrong filter with an exact count would show up.
-- **Repeat runs.** Each model ran each task once. Gemini 3.7 Flash scored 66 and then 62 of 68 on identical in-context questions in the 1,100-id configuration, so the rows-tool order between models a few points apart needs repeats.
+- **The same model with reasoning on and off.** Claude Opus 5 with extended thinking against its default, to measure the token effect inside one model.
+- **Other arithmetic.** Sums, averages and the largest value over returned rows, which the same tool-shape question applies to.
+- **Harder filters.** "At least 10 but under 20" and "outside 5 to 9", where a wrong filter with an exact count would show up.
 
 ---
 
@@ -296,15 +257,15 @@ The question to ask of a tool is whether it finishes the arithmetic. Every model
 
 #### Summary
 
-The goal of this article was to measure whether models count correctly when a tool does part of the work. The key to the solution was keeping the ids out of the prompt and grading the filter a model sends apart from the number it answers, so every miss is traced to either the question it asked or the counting it did.
+The goal of this article was to measure whether models count correctly what their tools return. The key to the solution was changing only what the tool returns, a count or a list, and recording every filter and every token, so each miss is traced to the query or the counting and each correct answer has a cost.
 
 The results were:
 
-- 🟢 With a tool that returns the count, 9 of 10 models answered all 68 questions correctly, and no answer rested on a wrong filter.
-- ❌ With a tool that returns the rows, scores ranged from 68 down to 29 of 68; 131 of the 136 misses were miscounts of the correct rows, and at 330 ids Claude Sonnet 5 counted 6 of 21 correctly.
-- ⚠️ With Python, 7 of 10 models scored 68 of 68; the misses came from skipping the tool, running code with no `print()`, and answering with a number other than the one printed.
+- 🟢 With the count in the tool, every model but gpt-oss-20b answered all 330-id questions correctly, at 35 to 451 output tokens per question.
+- ⚠️ With the rows, the models that reasoned counted 15 to 21 of 21 lists of 330 correctly and spent 2,700 to 8,200 output tokens per question.
+- ❌ The models that answered straight away counted 0 to 5 of 21 correctly, with no error to show it.
 
-Each of the 10 models ran each task once on Kaggle's model proxy between 2026-09-26 and 2026-09-28, at temperature 0 with output capped at 8,192 tokens. The reasoning-budget result comes from separate runs of Gemini 2.5 Flash and 3.7 Flash on the in-context task with lists up to 1,100 ids.
+Each model ran each task on Kaggle's model proxy with its default settings and output capped at 8,192 tokens; the engine and rows-tool figures come from runs on 2026-09-28 and 2026-09-29, the Python-tool figures from 2026-09-28, and the token-cap result from earlier in-context runs with lists of 1,100 ids.
 
 The strategy for benchmarking counting across 10 models was validated with an incremental step by step approach.
 
