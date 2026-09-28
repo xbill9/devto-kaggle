@@ -12,7 +12,7 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "results")
-VERSIONS = {"count-engine": 7, "count-rows-tool": 2, "count-python-tool": 6}
+VERSIONS = {"count-engine": 12, "count-rows-tool": 5, "count-python-tool": 9}
 ROWS_PER_TASK = 68
 MAX_ERRORED = 6
 NAMES = {

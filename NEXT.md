@@ -1,10 +1,10 @@
-# Where this stands and what is left (as of 2026-09-27)
+# Where this stands and what is left (as of 2026-09-28)
 
 Everything needed to finish is in this repo. Nothing depends on the machine it was started on.
 
 ## Decision
 
-**Wait one day, then re-push and re-run, check the leaderboard shows scores, then publish the benchmark and the post together.** Deadline: 2026-10-11, 11:59 PM PDT.
+**Runs are complete and the article matches them. Check the leaderboard shows scores, make the benchmark Public, fill the two `PENDING` links, then publish.** Deadline: 2026-10-11, 11:59 PM PDT.
 
 ## What exists
 
@@ -17,7 +17,13 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 | Cover | `article/devto-cover.d50932c1.jpg` | Done, pushed, referenced by `cover_image:` |
 | Evidence | `article/evidence/` | Text files behind every figure; `report.md` is the table source |
 
-## 2026-09-27 (current)
+## 2026-09-28 (current)
+
+- **All runs complete** for the 10-model lineup at `count-engine` v12, `count-rows-tool` v5, `count-python-tool` v9. Within the 6-row allowance: Claude Opus 5 has 2 errored rows-tool rows, gpt-oss-20b 2 errored Python-tool rows. `pending.py` still lists Flash-Lite, the Qwen models and the private tasks; those are outside the lineup.
+- `report.py` points at those versions; `report.md`, `scores-all-versions.txt` and `python-tool-wrong-answers.txt` are rebuilt, and the article's tables and prose are updated from them. `check-prose`, `check-facts` and `check-article` pass. The dev.to draft is **not yet updated** (`--update 4744048`).
+- Steps 1–5 are done. Start at step 6.
+
+## 2026-09-27
 
 - **Leaderboard fixed.** Kaggle shows one task per notebook, picked with `%choose`; every task file now ends with `# %choose <task>`. `%choose` deletes the per-question run files, so `summarize()` writes the completed rows to `rows-<label>.json`, which `kaggle b t download` fetches and `report.py` / `summarize.py` / `pending.py` read.
 - **Versions on the benchmark:** `count-engine` v12, `count-rows-tool` v5, `count-python-tool` v9 (old versions removed). Benchmark still **Private**.
@@ -25,7 +31,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 - **Quota** behaves as a rolling 24 h window, not a midnight reset.
 - If the CLI says "Authentication required" while `kaggle auth login` says you are logged in, run `kaggle auth login --force`.
 
-## Remaining steps (1–3 are done; start at 4 with the reruns above)
+## Remaining steps (1–5 are done; start at 6)
 
 1. **Setup on a new PC (skip if same machine).** Ask before installing anything.
    - `pip install kaggle` into the normal Python (no venv), then `kaggle auth login` (account **xbillwork**).
