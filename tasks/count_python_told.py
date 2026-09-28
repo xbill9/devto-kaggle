@@ -130,10 +130,22 @@ def summarize(runs, total: int, label: str) -> float:
 MAX_OUTPUT_TOKENS = 8192
 
 
+def usage_of(chat) -> dict:
+    if chat is None:
+        return dict(in_tokens=None, out_tokens=None, cost_usd=None)
+    u = chat.usage
+    cost = u.total_cost_nanodollars
+    return dict(in_tokens=u.input_tokens, out_tokens=u.output_tokens,
+                cost_usd=None if cost is None else cost / 1e9)
+
+
 def prompt_with_retry(llm, prompt, make_tools=None, attempts=6, **kw):
     """llm.prompt in a fresh chat per attempt, retrying the proxy's 429s.
 
-    Returns (answer, tool_log, error). The output cap keeps the proxy's cost
+    Returns (answer, tool_log, error, usage). usage holds the answering
+    attempt's tokens and cost as the proxy reports them, so the per-question
+    cost of each tool shape is kept in the
+    row results. The output cap keeps the proxy's cost
     reservation small. Proxy errors (quota, overload) raise so the row is
     rerun; any other failure, such as a reply cut off at the cap that does not
     parse as a number, returns answer None with the error text.
@@ -143,14 +155,16 @@ def prompt_with_retry(llm, prompt, make_tools=None, attempts=6, **kw):
     kw.setdefault("extra_api_params", {"max_completion_tokens": MAX_OUTPUT_TOKENS})
     for attempt in range(attempts):
         log: list = []
+        chat = None
         if make_tools is not None:
             kw["tools"] = [make_tools(log)]
         try:
-            with kbench.chats.new(f"attempt-{attempt}"):
-                return llm.prompt(prompt, **kw), log, ""
+            with kbench.chats.new(f"attempt-{attempt}") as chat:
+                answer = llm.prompt(prompt, **kw)
+                return answer, log, "", usage_of(chat)
         except Exception as e:
             if not type(e).__module__.startswith("openai"):
-                return None, log, f"{type(e).__name__}: {str(e)[:300]}"
+                return None, log, f"{type(e).__name__}: {str(e)[:300]}", usage_of(chat)
             if type(e).__name__ != "RateLimitError" or attempt == attempts - 1:
                 raise
             time.sleep(min(60, 5 * 2 ** attempt) + random.random())
@@ -191,7 +205,7 @@ def count_python_told_row(llm, case_id, size, phrasing, ids, question, truth_whe
         "Use the `run_python` tool to compute the answer; do not count by reading.\n\n"
         f"{question} Answer with just the number."
     )
-    answer, log, error = prompt_with_retry(llm, prompt, make_tools=lambda log: make_run_python(ids, log), schema=int)
+    answer, log, error, usage = prompt_with_retry(llm, prompt, make_tools=lambda log: make_run_python(ids, log), schema=int)
     answer = None if answer is None else int(answer)
     correct = answer == int(expected)
     kbench.assertions.assert_equal(int(expected), answer, expectation=f"{case_id}: {truth_where}")
@@ -203,7 +217,7 @@ def count_python_told_row(llm, case_id, size, phrasing, ids, question, truth_whe
         category = "correct-tool" if correct else "wrong-tool"
     return dict(case_id=case_id, size=int(size), phrasing=phrasing, answer=answer,
                 expected=int(expected), correct=correct, category=category,
-                tool_calls=len(log), code=log[-1] if log else "", error=error)
+                tool_calls=len(log), code=log[-1] if log else "", error=error, **usage)
 
 
 count_python_told.run(kbench.llm)
