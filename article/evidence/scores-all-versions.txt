@@ -87,6 +87,12 @@ by size
 by phrasing  
 categories   
 
+== count-engine v12 claude-haiku-4-5-20251001 (run 3381274)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 68
+
 == count-engine v12 claude-opus-5-default (run 3241008)
 correct 68 of 68; errored 0; missing 0
 by size      11: 26/26  110: 21/21  330: 21/21
@@ -98,6 +104,12 @@ correct 0 of 68; errored 68; missing 0
 by size      
 by phrasing  
 categories   
+
+== count-engine v12 claude-opus-5-default (run 3381276)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 68
 
 == count-engine v12 claude-sonnet-5-default (run 3241007)
 correct 68 of 68; errored 0; missing 0
@@ -111,6 +123,12 @@ by size
 by phrasing  
 categories   
 
+== count-engine v12 claude-sonnet-5-default (run 3381275)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 68
+
 == count-engine v12 gemini-2.5-flash (run 3241004)
 correct 68 of 68; errored 0; missing 0
 by size      11: 26/26  110: 21/21  330: 21/21
@@ -122,6 +140,12 @@ correct 0 of 68; errored 68; missing 0
 by size      
 by phrasing  
 categories   
+
+== count-engine v12 gemini-2.5-flash (run 3381272)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 68
 
 == count-engine v12 gemini-3.7-flash (run 3240850)
 correct 68 of 68; errored 0; missing 0
@@ -141,6 +165,12 @@ by size
 by phrasing  
 categories   
 
+== count-engine v12 gemini-3.8-flash (run 3381273)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 68
+
 == count-engine v12 gemma-4-26b-a4b-it (run 3241011)
 correct 68 of 68; errored 0; missing 0
 by size      11: 26/26  110: 21/21  330: 21/21
@@ -152,6 +182,12 @@ correct 1 of 68; errored 67; missing 0
 by size      330: 1/1
 by phrasing  at-least: 1/1
 categories   correct: 1
+
+== count-engine v12 gemma-4-26b-a4b-it (run 3381279)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 68
 
 == count-engine v12 gpt-5.4-mini-2026-03-17 (run 3241010)
 correct 68 of 68; errored 0; missing 0
@@ -165,6 +201,12 @@ by size
 by phrasing  
 categories   
 
+== count-engine v12 gpt-5.4-mini-2026-03-17 (run 3381278)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 68
+
 == count-engine v12 gpt-5.4-nano-2026-03-17 (run 3241009)
 correct 68 of 68; errored 0; missing 0
 by size      11: 26/26  110: 21/21  330: 21/21
@@ -176,6 +218,12 @@ correct 0 of 68; errored 68; missing 0
 by size      
 by phrasing  
 categories   
+
+== count-engine v12 gpt-5.4-nano-2026-03-17 (run 3381277)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 68
 
 == count-engine v12 gpt-oss-20b (run 3241012)
 correct 64 of 68; errored 0; missing 0
@@ -198,6 +246,26 @@ categories   correct: 38  not-quoted: 6
   wrong 330-no-less-than-s1: answered 0 expected 220 (off by -220)
   wrong 330-under-s0: answered 1 expected 135 (off by -134)
   wrong 330-at-most-s2: answered 1 expected 102 (off by -101)
+
+== count-engine v12 gpt-oss-20b (run 3381280)
+correct 54 of 68; errored 0; missing 0
+by size      11: 23/26  110: 13/21  330: 18/21
+by phrasing  at-least: 8/9  at-most: 6/9  between-inclusive: 6/9  more-than: 8/9  no-less-than: 7/9  or-more: 12/14  under: 7/9
+categories   correct: 54  not-quoted: 14
+  wrong 11-at-least-s2: answered 0 expected 8 (off by -8)
+  wrong 11-under-s1: answered 0 expected 5 (off by -5)
+  wrong 11-at-most-s1: answered 1 expected 4 (off by -3)
+  wrong 110-or-more-s0: answered 0 expected 52 (off by -52)
+  wrong 110-no-less-than-s0: answered 0 expected 68 (off by -68)
+  wrong 110-more-than-s0: answered 129 expected 53 (off by +76)
+  wrong 110-under-s2: answered 123 expected 49 (off by +74)
+  wrong 110-at-most-s0: answered 0 expected 47 (off by -47)
+  wrong 110-at-most-s2: answered 1 expected 50 (off by -49)
+  wrong 110-between-inclusive-s1: answered 1 expected 17 (off by -16)
+  wrong 110-between-inclusive-s2: answered 0 expected 3 (off by -3)
+  wrong 330-or-more-s1: answered 1 expected 154 (off by -153)
+  wrong 330-no-less-than-s1: answered 0 expected 220 (off by -220)
+  wrong 330-between-inclusive-s2: answered 0 expected 90 (off by -90)
 
 == count-engine v2 claude-haiku-4-5-20251001 (run 2875761)
 correct 0 of 68; errored 68; missing 0
@@ -1555,6 +1623,14 @@ tool used
 tool skipped 0 rows: 0 of 0 wrong
 categories   
 
+== count-python-tool v9 gemma-4-26b-a4b-it (run 3381106)
+correct 68 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 21/21
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+tool used    11: 25/26  110: 21/21  330: 21/21
+tool skipped 1 rows: 0 of 1 wrong
+categories   correct-tool: 67  correct-no-tool: 1
+
 == count-python-tool v9 gpt-5.4-mini-2026-03-17 (run 3273776)
 correct 19 of 68; errored 49; missing 0
 by size      11: 16/16  110: 2/2  330: 1/1
@@ -1637,6 +1713,25 @@ by phrasing
 tool used    
 tool skipped 0 rows: 0 of 0 wrong
 categories   
+
+== count-python-tool v9 gpt-oss-20b (run 3381107)
+correct 56 of 68; errored 1; missing 0
+by size      11: 21/26  110: 18/21  330: 17/20
+by phrasing  at-least: 9/9  at-most: 9/9  between-inclusive: 6/9  more-than: 7/8  no-less-than: 6/9  or-more: 11/14  under: 8/9
+tool used    11: 18/26  110: 18/21  330: 16/20
+tool skipped 15 rows: 6 of 15 wrong
+categories   correct-tool: 47  correct-no-tool: 9  miscount-no-tool: 6  wrong-tool: 5
+  wrong 11-or-more-s2: answered 7 expected 8 (off by -1)
+  wrong 11-no-less-than-s2: answered 0 expected 5 (off by -5)
+  wrong 11-more-than-s1: answered 0 expected 6 (off by -6)
+  wrong 11-between-inclusive-s0: answered 4 expected 2 (off by +2)
+  wrong 11-between-inclusive-s1: answered 11 expected 5 (off by +6)
+  wrong 110-or-more-s1: answered 1 expected 72 (off by -71)
+  wrong 110-under-s0: answered 1 expected 48 (off by -47)
+  wrong 110-between-inclusive-s0: answered 1 expected 49 (off by -48)
+  wrong 330-or-more-s2: answered 0 expected 160 (off by -160)
+  wrong 330-no-less-than-s1: answered 239 expected 220 (off by +19)
+  wrong 330-no-less-than-s2: answered 1 expected 169 (off by -168)
 
 == count-rows-tool v2 claude-haiku-4-5-20251001 (run 3194895)
 correct 52 of 68; errored 0; missing 0
@@ -1905,6 +2000,27 @@ by size
 by phrasing  
 categories   
 
+== count-rows-tool v5 claude-haiku-4-5-20251001 (run 3381184)
+correct 53 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 6/21
+by phrasing  at-least: 6/9  at-most: 8/9  between-inclusive: 8/9  more-than: 6/9  no-less-than: 7/9  or-more: 11/14  under: 7/9
+categories   correct: 53  miscounted-rows: 15
+  wrong 330-or-more-s0: answered 170 expected 158 (off by +12)
+  wrong 330-or-more-s1: answered 169 expected 154 (off by +15)
+  wrong 330-or-more-s2: answered 169 expected 160 (off by +9)
+  wrong 330-at-least-s0: answered 217 expected 204 (off by +13)
+  wrong 330-at-least-s1: answered 217 expected 225 (off by -8)
+  wrong 330-at-least-s2: answered 200 expected 199 (off by +1)
+  wrong 330-no-less-than-s0: answered 191 expected 178 (off by +13)
+  wrong 330-no-less-than-s1: answered 250 expected 220 (off by +30)
+  wrong 330-more-than-s0: answered 177 expected 155 (off by +22)
+  wrong 330-more-than-s1: answered 200 expected 190 (off by +10)
+  wrong 330-more-than-s2: answered 225 expected 216 (off by +9)
+  wrong 330-under-s1: answered 126 expected 122 (off by +4)
+  wrong 330-under-s2: answered 161 expected 173 (off by -12)
+  wrong 330-at-most-s1: answered 151 expected 167 (off by -16)
+  wrong 330-between-inclusive-s0: answered 130 expected 129 (off by +1)
+
 == count-rows-tool v5 claude-opus-5-default (run 3241063)
 correct 53 of 68; errored 2; missing 0
 by size      11: 26/26  110: 21/21  330: 6/19
@@ -1929,6 +2045,25 @@ correct 0 of 68; errored 68; missing 0
 by size      
 by phrasing  
 categories   
+
+== count-rows-tool v5 claude-opus-5-default (run 3381185)
+correct 55 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 8/21
+by phrasing  at-least: 6/9  at-most: 9/9  between-inclusive: 8/9  more-than: 7/9  no-less-than: 6/9  or-more: 11/14  under: 8/9
+categories   correct: 55  miscounted-rows: 13
+  wrong 330-or-more-s0: answered 157 expected 158 (off by -1)
+  wrong 330-or-more-s1: answered 151 expected 154 (off by -3)
+  wrong 330-or-more-s2: answered 159 expected 160 (off by -1)
+  wrong 330-at-least-s0: answered 199 expected 204 (off by -5)
+  wrong 330-at-least-s1: answered 222 expected 225 (off by -3)
+  wrong 330-at-least-s2: answered 195 expected 199 (off by -4)
+  wrong 330-no-less-than-s0: answered 174 expected 178 (off by -4)
+  wrong 330-no-less-than-s1: answered 215 expected 220 (off by -5)
+  wrong 330-no-less-than-s2: answered 167 expected 169 (off by -2)
+  wrong 330-more-than-s0: answered 153 expected 155 (off by -2)
+  wrong 330-more-than-s2: answered 213 expected 216 (off by -3)
+  wrong 330-under-s2: answered 170 expected 173 (off by -3)
+  wrong 330-between-inclusive-s0: answered 126 expected 129 (off by -3)
 
 == count-rows-tool v5 claude-sonnet-5-default (run 3241062)
 correct 51 of 68; errored 8; missing 0
@@ -2015,6 +2150,37 @@ by size
 by phrasing  
 categories   
 
+== count-rows-tool v5 gemini-2.5-flash (run 3381182)
+correct 43 of 68; errored 0; missing 0
+by size      11: 24/26  110: 16/21  330: 3/21
+by phrasing  at-least: 6/9  at-most: 6/9  between-inclusive: 7/9  more-than: 5/9  no-less-than: 6/9  or-more: 9/14  under: 4/9
+categories   correct: 43  miscounted-rows: 21  no-call: 4
+  wrong 11-or-more-s1: answered 2 expected 7 (off by -5)
+  wrong 11-more-than-s0: answered 0 expected 5 (off by -5)
+  wrong 110-or-more-s2: answered 79 expected 77 (off by +2)
+  wrong 110-at-least-s0: answered 73 expected 72 (off by +1)
+  wrong 110-under-s0: answered 46 expected 48 (off by -2)
+  wrong 110-under-s1: answered 62 expected 61 (off by +1)
+  wrong 110-at-most-s0: answered 110 expected 47 (off by +63)
+  wrong 330-or-more-s0: answered 160 expected 158 (off by +2)
+  wrong 330-or-more-s1: answered 156 expected 154 (off by +2)
+  wrong 330-or-more-s2: answered 158 expected 160 (off by -2)
+  wrong 330-at-least-s0: answered 155 expected 204 (off by -49)
+  wrong 330-at-least-s2: answered 195 expected 199 (off by -4)
+  wrong 330-no-less-than-s0: answered 172 expected 178 (off by -6)
+  wrong 330-no-less-than-s1: answered 195 expected 220 (off by -25)
+  wrong 330-no-less-than-s2: answered 159 expected 169 (off by -10)
+  wrong 330-more-than-s0: answered 150 expected 155 (off by -5)
+  wrong 330-more-than-s1: answered 100 expected 190 (off by -90)
+  wrong 330-more-than-s2: answered 208 expected 216 (off by -8)
+  wrong 330-under-s0: answered 132 expected 135 (off by -3)
+  wrong 330-under-s1: answered 124 expected 122 (off by +2)
+  wrong 330-under-s2: answered 176 expected 173 (off by +3)
+  wrong 330-at-most-s1: answered 163 expected 167 (off by -4)
+  wrong 330-at-most-s2: answered 110 expected 102 (off by +8)
+  wrong 330-between-inclusive-s0: answered 135 expected 129 (off by +6)
+  wrong 330-between-inclusive-s1: answered 61 expected 60 (off by +1)
+
 == count-rows-tool v5 gemini-3.7-flash (run 3240876)
 correct 68 of 68; errored 0; missing 0
 by size      11: 26/26  110: 21/21  330: 21/21
@@ -2051,6 +2217,24 @@ by size      330: 1/1
 by phrasing  at-least: 1/1
 categories   correct: 1
 
+== count-rows-tool v5 gemma-4-26b-a4b-it (run 3381183)
+correct 67 of 68; errored 0; missing 0
+by size      11: 26/26  110: 21/21  330: 20/21
+by phrasing  at-least: 8/9  at-most: 9/9  between-inclusive: 9/9  more-than: 9/9  no-less-than: 9/9  or-more: 14/14  under: 9/9
+categories   correct: 67  no-answer: 1
+  no answer 330-at-least-s0: ResponseParsingError: Response parsing failed.
+Input Value:
+---
+
+---
+Target Schema:
+---
+{
+  "additionalProperties": false,
+  "properties": {
+    "value": {
+    
+
 == count-rows-tool v5 gpt-5.4-mini-2026-03-17 (run 3241065)
 correct 50 of 68; errored 0; missing 0
 by size      11: 26/26  110: 19/21  330: 5/21
@@ -2080,6 +2264,32 @@ correct 0 of 68; errored 68; missing 0
 by size      
 by phrasing  
 categories   
+
+== count-rows-tool v5 gpt-5.4-mini-2026-03-17 (run 3381187)
+correct 48 of 68; errored 0; missing 0
+by size      11: 26/26  110: 20/21  330: 2/21
+by phrasing  at-least: 6/9  at-most: 5/9  between-inclusive: 8/9  more-than: 6/9  no-less-than: 6/9  or-more: 11/14  under: 6/9
+categories   correct: 48  miscounted-rows: 20
+  wrong 110-at-most-s1: answered 65 expected 66 (off by -1)
+  wrong 330-or-more-s0: answered 161 expected 158 (off by +3)
+  wrong 330-or-more-s1: answered 157 expected 154 (off by +3)
+  wrong 330-or-more-s2: answered 163 expected 160 (off by +3)
+  wrong 330-at-least-s0: answered 196 expected 204 (off by -8)
+  wrong 330-at-least-s1: answered 200 expected 225 (off by -25)
+  wrong 330-at-least-s2: answered 190 expected 199 (off by -9)
+  wrong 330-no-less-than-s0: answered 174 expected 178 (off by -4)
+  wrong 330-no-less-than-s1: answered 200 expected 220 (off by -20)
+  wrong 330-no-less-than-s2: answered 173 expected 169 (off by +4)
+  wrong 330-more-than-s0: answered 158 expected 155 (off by +3)
+  wrong 330-more-than-s1: answered 183 expected 190 (off by -7)
+  wrong 330-more-than-s2: answered 200 expected 216 (off by -16)
+  wrong 330-under-s0: answered 133 expected 135 (off by -2)
+  wrong 330-under-s1: answered 124 expected 122 (off by +2)
+  wrong 330-under-s2: answered 169 expected 173 (off by -4)
+  wrong 330-at-most-s0: answered 140 expected 137 (off by +3)
+  wrong 330-at-most-s1: answered 169 expected 167 (off by +2)
+  wrong 330-at-most-s2: answered 103 expected 102 (off by +1)
+  wrong 330-between-inclusive-s0: answered 130 expected 129 (off by +1)
 
 == count-rows-tool v5 gpt-5.4-nano-2026-03-17 (run 3241064)
 correct 30 of 68; errored 0; missing 0
@@ -2131,6 +2341,51 @@ by size
 by phrasing  
 categories   
 
+== count-rows-tool v5 gpt-5.4-nano-2026-03-17 (run 3381186)
+correct 29 of 68; errored 0; missing 0
+by size      11: 26/26  110: 3/21  330: 0/21
+by phrasing  at-least: 3/9  at-most: 4/9  between-inclusive: 5/9  more-than: 3/9  no-less-than: 3/9  or-more: 8/14  under: 3/9
+categories   miscounted-rows: 39  correct: 29
+  wrong 110-or-more-s0: answered 57 expected 52 (off by +5)
+  wrong 110-or-more-s1: answered 77 expected 72 (off by +5)
+  wrong 110-or-more-s2: answered 72 expected 77 (off by -5)
+  wrong 110-at-least-s0: answered 60 expected 72 (off by -12)
+  wrong 110-at-least-s1: answered 56 expected 52 (off by +4)
+  wrong 110-at-least-s2: answered 50 expected 46 (off by +4)
+  wrong 110-no-less-than-s0: answered 73 expected 68 (off by +5)
+  wrong 110-no-less-than-s1: answered 52 expected 47 (off by +5)
+  wrong 110-no-less-than-s2: answered 59 expected 51 (off by +8)
+  wrong 110-more-than-s0: answered 56 expected 53 (off by +3)
+  wrong 110-more-than-s1: answered 49 expected 47 (off by +2)
+  wrong 110-more-than-s2: answered 66 expected 61 (off by +5)
+  wrong 110-under-s0: answered 51 expected 48 (off by +3)
+  wrong 110-under-s1: answered 69 expected 61 (off by +8)
+  wrong 110-under-s2: answered 54 expected 49 (off by +5)
+  wrong 110-at-most-s0: answered 45 expected 47 (off by -2)
+  wrong 110-at-most-s1: answered 67 expected 66 (off by +1)
+  wrong 110-between-inclusive-s0: answered 55 expected 49 (off by +6)
+  wrong 330-or-more-s0: answered 110 expected 158 (off by -48)
+  wrong 330-or-more-s1: answered 128 expected 154 (off by -26)
+  wrong 330-or-more-s2: answered 106 expected 160 (off by -54)
+  wrong 330-at-least-s0: answered 130 expected 204 (off by -74)
+  wrong 330-at-least-s1: answered 155 expected 225 (off by -70)
+  wrong 330-at-least-s2: answered 144 expected 199 (off by -55)
+  wrong 330-no-less-than-s0: answered 87 expected 178 (off by -91)
+  wrong 330-no-less-than-s1: answered 117 expected 220 (off by -103)
+  wrong 330-no-less-than-s2: answered 124 expected 169 (off by -45)
+  wrong 330-more-than-s0: answered 122 expected 155 (off by -33)
+  wrong 330-more-than-s1: answered 142 expected 190 (off by -48)
+  wrong 330-more-than-s2: answered 105 expected 216 (off by -111)
+  wrong 330-under-s0: answered 93 expected 135 (off by -42)
+  wrong 330-under-s1: answered 91 expected 122 (off by -31)
+  wrong 330-under-s2: answered 121 expected 173 (off by -52)
+  wrong 330-at-most-s0: answered 89 expected 137 (off by -48)
+  wrong 330-at-most-s1: answered 144 expected 167 (off by -23)
+  wrong 330-at-most-s2: answered 86 expected 102 (off by -16)
+  wrong 330-between-inclusive-s0: answered 106 expected 129 (off by -23)
+  wrong 330-between-inclusive-s1: answered 70 expected 60 (off by +10)
+  wrong 330-between-inclusive-s2: answered 85 expected 90 (off by -5)
+
 == count-rows-tool v5 gpt-oss-20b (run 3241067)
 correct 57 of 68; errored 0; missing 0
 by size      11: 23/26  110: 18/21  330: 16/21
@@ -2154,6 +2409,20 @@ by size
 by phrasing  
 categories   
 
+== count-rows-tool v5 gpt-oss-20b (run 3381188)
+correct 60 of 68; errored 0; missing 0
+by size      11: 24/26  110: 18/21  330: 18/21
+by phrasing  at-least: 9/9  at-most: 7/9  between-inclusive: 6/9  more-than: 9/9  no-less-than: 9/9  or-more: 12/14  under: 8/9
+categories   correct: 60  miscounted-rows: 8
+  wrong original-r3: answered 0 expected 8 (off by -8)
+  wrong 11-at-most-s1: answered 0 expected 4 (off by -4)
+  wrong 110-under-s2: answered 48 expected 49 (off by -1)
+  wrong 110-at-most-s1: answered 0 expected 66 (off by -66)
+  wrong 110-between-inclusive-s1: answered 0 expected 17 (off by -17)
+  wrong 330-or-more-s2: answered 90 expected 160 (off by -70)
+  wrong 330-between-inclusive-s0: answered 0 expected 129 (off by -129)
+  wrong 330-between-inclusive-s1: answered 30 expected 60 (off by -30)
+
 task                 ver  model                          correct  errored
 count-engine         v1   gemini-2.5-flash                33/68      35
 count-engine         v1   gemini-3.7-flash                68/68       0
@@ -2169,22 +2438,31 @@ count-engine         v11  gpt-5.4-nano-2026-03-17         68/68       0
 count-engine         v11  gpt-oss-20b                     63/68       0
 count-engine         v12  claude-haiku-4-5-20251001        0/68      68
 count-engine         v12  claude-haiku-4-5-20251001       68/68       0
+count-engine         v12  claude-haiku-4-5-20251001       68/68       0
 count-engine         v12  claude-opus-5-default            0/68      68
+count-engine         v12  claude-opus-5-default           68/68       0
 count-engine         v12  claude-opus-5-default           68/68       0
 count-engine         v12  claude-sonnet-5-default          0/68      68
 count-engine         v12  claude-sonnet-5-default         68/68       0
+count-engine         v12  claude-sonnet-5-default         68/68       0
 count-engine         v12  gemini-2.5-flash                 0/68      68
+count-engine         v12  gemini-2.5-flash                68/68       0
 count-engine         v12  gemini-2.5-flash                68/68       0
 count-engine         v12  gemini-3.7-flash                68/68       0
 count-engine         v12  gemini-3.8-flash                 0/68      68
 count-engine         v12  gemini-3.8-flash                68/68       0
+count-engine         v12  gemini-3.8-flash                68/68       0
 count-engine         v12  gemma-4-26b-a4b-it               1/68      67
+count-engine         v12  gemma-4-26b-a4b-it              68/68       0
 count-engine         v12  gemma-4-26b-a4b-it              68/68       0
 count-engine         v12  gpt-5.4-mini-2026-03-17          0/68      68
 count-engine         v12  gpt-5.4-mini-2026-03-17         68/68       0
+count-engine         v12  gpt-5.4-mini-2026-03-17         68/68       0
 count-engine         v12  gpt-5.4-nano-2026-03-17          0/68      68
 count-engine         v12  gpt-5.4-nano-2026-03-17         68/68       0
+count-engine         v12  gpt-5.4-nano-2026-03-17         68/68       0
 count-engine         v12  gpt-oss-20b                     38/68      24
+count-engine         v12  gpt-oss-20b                     54/68       0
 count-engine         v12  gpt-oss-20b                     64/68       0
 count-engine         v2   claude-haiku-4-5-20251001        0/68      68
 count-engine         v2   claude-opus-5-default            0/68      68
@@ -2287,6 +2565,7 @@ count-python-tool    v9   gemini-3.8-flash                21/68      47
 count-python-tool    v9   gemini-3.8-flash                68/68       0
 count-python-tool    v9   gemma-4-26b-a4b-it               0/68      68
 count-python-tool    v9   gemma-4-26b-a4b-it              68/68       0
+count-python-tool    v9   gemma-4-26b-a4b-it              68/68       0
 count-python-tool    v9   gpt-5.4-mini-2026-03-17          0/68      68
 count-python-tool    v9   gpt-5.4-mini-2026-03-17         19/68      49
 count-python-tool    v9   gpt-5.4-mini-2026-03-17         64/68       0
@@ -2295,6 +2574,7 @@ count-python-tool    v9   gpt-5.4-nano-2026-03-17         43/68      25
 count-python-tool    v9   gpt-5.4-nano-2026-03-17         68/68       0
 count-python-tool    v9   gpt-oss-20b                      0/68      68
 count-python-tool    v9   gpt-oss-20b                     51/68       2
+count-python-tool    v9   gpt-oss-20b                     56/68       1
 count-rows-tool      v2   claude-haiku-4-5-20251001       52/68       0
 count-rows-tool      v2   claude-opus-5-default           56/68       0
 count-rows-tool      v2   claude-sonnet-5-default         57/68       0
@@ -2314,23 +2594,30 @@ count-rows-tool      v2   qwen3-next-80b-a3b-thinking      2/68      65
 count-rows-tool      v2   qwen3-next-80b-a3b-thinking      2/68      66
 count-rows-tool      v5   claude-haiku-4-5-20251001        0/68      68
 count-rows-tool      v5   claude-haiku-4-5-20251001       52/68       0
+count-rows-tool      v5   claude-haiku-4-5-20251001       53/68       0
 count-rows-tool      v5   claude-opus-5-default            0/68      68
 count-rows-tool      v5   claude-opus-5-default           53/68       2
+count-rows-tool      v5   claude-opus-5-default           55/68       0
 count-rows-tool      v5   claude-sonnet-5-default          0/68      68
 count-rows-tool      v5   claude-sonnet-5-default          0/68      68
 count-rows-tool      v5   claude-sonnet-5-default         51/68       8
 count-rows-tool      v5   claude-sonnet-5-default         53/68       0
 count-rows-tool      v5   gemini-2.5-flash                 0/68      68
 count-rows-tool      v5   gemini-2.5-flash                43/68       0
+count-rows-tool      v5   gemini-2.5-flash                43/68       0
 count-rows-tool      v5   gemini-3.7-flash                68/68       0
 count-rows-tool      v5   gemini-3.8-flash                 0/68      68
 count-rows-tool      v5   gemini-3.8-flash                62/68       6
 count-rows-tool      v5   gemini-3.8-flash                68/68       0
 count-rows-tool      v5   gemma-4-26b-a4b-it               1/68      67
+count-rows-tool      v5   gemma-4-26b-a4b-it              67/68       0
 count-rows-tool      v5   gemma-4-26b-a4b-it              68/68       0
 count-rows-tool      v5   gpt-5.4-mini-2026-03-17          0/68      68
+count-rows-tool      v5   gpt-5.4-mini-2026-03-17         48/68       0
 count-rows-tool      v5   gpt-5.4-mini-2026-03-17         50/68       0
 count-rows-tool      v5   gpt-5.4-nano-2026-03-17          0/68      68
+count-rows-tool      v5   gpt-5.4-nano-2026-03-17         29/68       0
 count-rows-tool      v5   gpt-5.4-nano-2026-03-17         30/68       0
 count-rows-tool      v5   gpt-oss-20b                      0/68      68
 count-rows-tool      v5   gpt-oss-20b                     57/68       0
+count-rows-tool      v5   gpt-oss-20b                     60/68       0

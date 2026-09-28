@@ -4,24 +4,26 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 
 ## Decision
 
-**Runs are complete and the article matches them. Check the leaderboard shows scores, make the benchmark Public, fill the two `PENDING` links, then publish.** Deadline: 2026-10-11, 11:59 PM PDT.
+**Runs are complete, the leaderboard shows scores, and the article matches it. Make the benchmark Public, fill the two `PENDING` links, then publish.** Deadline: 2026-10-11, 11:59 PM PDT.
 
 ## What exists
 
 | Thing | Where | State |
 |---|---|---|
-| Code | https://github.com/xbill9/devto-kaggle (`main`) | Current. Scoring task is now first in every `tasks/count_*.py` (not yet pushed to Kaggle) |
-| Kaggle tasks | `kaggle.com/benchmarks/tasks/xbillwork/count-engine` (v7), `count-rows-tool` (v2), `count-python-tool` (v6) | **Public**, with backing notebooks. `count-python-told` and `count-in-context` exist but stay private and out of the article |
-| Kaggle benchmark | https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it | **Private**. 3 tasks, 10 models added. Leaderboard cells blank (see below) |
+| Code | https://github.com/xbill9/devto-kaggle (`main`) | Current, and matches the pushed task versions |
+| Kaggle tasks | `kaggle.com/benchmarks/tasks/xbillwork/count-engine` (v12), `count-rows-tool` (v5), `count-python-tool` (v9) | **Public**, with backing notebooks. `count-python-told` and `count-in-context` exist but stay private and out of the article |
+| Kaggle benchmark | https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it | **Private**. 3 tasks, 10 models added. Leaderboard shows scores |
 | dev.to article | draft id **4744048**, source `article/devto-count-it-or-compute-it.md` | **Unpublished draft**. Two `PENDING` lines need the benchmark link |
 | Cover | `article/devto-cover.d50932c1.jpg` | Done, pushed, referenced by `cover_image:` |
 | Evidence | `article/evidence/` | Text files behind every figure; `report.md` is the table source |
 
 ## 2026-09-28 (current)
 
-- **All runs complete** for the 10-model lineup at `count-engine` v12, `count-rows-tool` v5, `count-python-tool` v9. Within the 6-row allowance: Claude Opus 5 has 2 errored rows-tool rows, gpt-oss-20b 2 errored Python-tool rows. `pending.py` still lists Flash-Lite, the Qwen models and the private tasks; those are outside the lineup.
-- `report.py` points at those versions; `report.md`, `scores-all-versions.txt` and `python-tool-wrong-answers.txt` are rebuilt, and the article's tables and prose are updated from them. `check-prose`, `check-facts` and `check-article` pass. The dev.to draft is **not yet updated** (`--update 4744048`).
-- Steps 1–5 are done. Start at step 6.
+- **All runs complete, and the leaderboard shows scores.** The leaderboard shows each model's *latest* run, not its best: a batch started 2026-09-27 14:00 UTC after the quota ran out had left empty latest runs for 18 pairs, so those were rerun. `report.py` and `pending.py` now judge each pair by its latest run too, so the article's tables match `kaggle b leaderboard xbillwork/count-it-or-compute-it -s` (checked for every model).
+- **Never start a run that might hit the quota** on a pair whose latest run is good: a failed run becomes the one the leaderboard shows.
+- Within the 6-row allowance: gpt-oss-20b has 1 errored Python-tool row. `pending.py` still lists Flash-Lite, the Qwen models and the private tasks; those are outside the lineup.
+- `report.md`, `scores-all-versions.txt`, `python-tool-wrong-answers.txt` and the article are rebuilt from the latest runs; `check-prose`, `check-facts`, `check-article` pass. The dev.to draft is **not yet updated** (`--update 4744048`).
+- Steps 1–5 are done. Start at step 6 (the leaderboard part of it is done: make the benchmark Public).
 
 ## 2026-09-27
 

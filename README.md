@@ -17,7 +17,8 @@ Each task asks 68 questions: lists of 11, 110 and 330 ids, seven phrasings of th
 - `tasks/count_*.py`: the five Kaggle tasks. The block between `# ---- shared:` and `# ---- end shared ----` must be identical in all of them.
 - `tasks/check.py`: local checks, no model calls and no `kaggle_benchmarks` needed.
 - `tasks/summarize.py`, `tasks/costs.py`: scores and cost per row from downloaded run files.
-- `tasks/pending.py`: the `kaggle b t run` commands still needed for the model lineup.
+- `tasks/report.py`: the article's tables, from each model's latest run (the one the Kaggle leaderboard shows).
+- `tasks/pending.py`: the `kaggle b t run` commands still needed for the model lineup, judged by each model's latest run.
 - `article/`: the dev.to write-up and the text evidence behind every figure in it.
 
 ## Run

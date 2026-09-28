@@ -1,6 +1,7 @@
 """Markdown result tables for the article, computed from the downloaded run files.
 
-Uses each task's version given below. A model's run counts when at most
+Uses each task's version given below and each model's latest run of it, which
+is the run the benchmark leaderboard shows. A model's run counts when at most
 MAX_ERRORED rows errored (proxy overload or quota); errored rows count as wrong
 and are shown in the table.
 
@@ -27,12 +28,19 @@ NAMES = {
 }
 
 
+def started(run_dir: pathlib.Path) -> str:
+    for f in run_dir.glob("*.run.json"):
+        if "-row-run_param_id_" not in f.name:
+            return json.loads(f.read_text()).get("startTime", "")
+    return ""
+
+
 def load(task: str) -> dict:
-    """model -> (rows, errored) for the best run of the task's version."""
+    """model -> (rows, errored) for the latest run of the task's version."""
     out = {}
     for model_dir in (ROOT / task / str(VERSIONS[task])).glob("*"):
         best = None
-        for run_dir in model_dir.glob("*"):
+        for run_dir in sorted(model_dir.glob("*"), key=started):
             rows, errored = [], 0
             # %choose versions write the completed rows to rows-<label>.json.
             for f in run_dir.glob("rows-*.json"):
@@ -44,8 +52,7 @@ def load(task: str) -> dict:
                     rows.append(d["results"][0]["dictResult"])
                 else:
                     errored += 1
-            if best is None or len(rows) > len(best[0]):
-                best = (rows, errored)
+            best = (rows, errored)
         if best and best[1] <= MAX_ERRORED and len(best[0]) + best[1] == ROWS_PER_TASK:
             out[model_dir.name] = best
     return out

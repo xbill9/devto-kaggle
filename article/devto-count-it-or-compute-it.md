@@ -10,7 +10,7 @@ cover_image: https://raw.githubusercontent.com/xbill9/devto-kaggle/main/article/
 
 Ask a model how many ids in a list are 10 or more, and whether it gets the answer right depends on who does the counting. This benchmark gives ten models the same 68 questions with three different tools: one that returns the exact count, one that returns the matching rows, and a Python interpreter.
 
-When the tool returned the count, nine of the ten models answered all 68 correctly. When the tool returned the rows, no answer rested on a wrong filter, and scores still ranged from 68 of 68 down to 30: 133 of the 138 misses were miscounts of the correct rows. At 330 ids, Claude Sonnet 5 counted 6 of 21 correctly and Gemma 4 26B counted 21 of 21.
+When the tool returned the count, nine of the ten models answered all 68 correctly. When the tool returned the rows, no answer rested on a wrong filter, and scores still ranged from 68 of 68 down to 29: 131 of the 136 misses were miscounts of the correct rows. At 330 ids, Claude Sonnet 5 counted 6 of 21 correctly and Gemma 4 26B counted 20 of 21.
 
 https://github.com/xbill9/devto-kaggle
 
@@ -61,48 +61,48 @@ Four models from the planned lineup have no complete run of all three tasks. GPT
 | Model | Engine | Rows tool | Rows tool, 330 ids | Python tool |
 |---|---|---|---|---|
 | Gemini 3.7 Flash | 🥇 68/68 | 🥇 68/68 | 21/21 | 🥇 68/68 |
-| Gemma 4 26B A4B | 🥇 68/68 | 🥇 68/68 | 21/21 | 🥇 68/68 |
 | Gemini 3.8 Flash | 🥇 68/68 | 🥇 68/68 | 21/21 | 🥇 68/68 |
-| gpt-oss-20b | 64/68 | 57/68 | 16/21 | 51/68 |
+| Gemma 4 26B A4B | 🥇 68/68 | 🥈 67/68 | 20/21 | 🥇 68/68 |
+| gpt-oss-20b | 54/68 | 60/68 | 18/21 | 56/68 |
+| Claude Opus 5 | 🥇 68/68 | 55/68 | 8/21 | 🥇 68/68 |
+| Claude Haiku 4.5 | 🥇 68/68 | 53/68 | 6/21 | 🥇 68/68 |
 | Claude Sonnet 5 | 🥇 68/68 | 53/68 | 6/21 | 🥇 68/68 |
-| Claude Opus 5 | 🥇 68/68 | 53/68 | 6/21 | 🥇 68/68 |
-| Claude Haiku 4.5 | 🥇 68/68 | 52/68 | 5/21 | 🥇 68/68 |
-| GPT-5.4 mini | 🥇 68/68 | 50/68 | 5/21 | 64/68 |
+| GPT-5.4 mini | 🥇 68/68 | 48/68 | 2/21 | 64/68 |
 | Gemini 2.5 Flash | 🥇 68/68 | 43/68 | 3/21 | 37/68 |
-| GPT-5.4 nano | 🥇 68/68 | 30/68 | 0/21 | 🥇 68/68 |
+| GPT-5.4 nano | 🥇 68/68 | 29/68 | 0/21 | 🥇 68/68 |
 
-Two rows-tool questions for Claude Opus 5, both at 330 ids, and two Python-tool questions for gpt-oss-20b returned a proxy error and count as wrong.
+One Python-tool question for gpt-oss-20b returned a proxy error and counts as wrong.
 
 #### 1. When the Engine Counts, the Answer Is Right
 
-Nine of the ten models answered all 68 engine questions correctly, and none of the 680 answers rested on a filter that selected the wrong ids. Turning "no less than 244" into `id >= 244` is a task these models do reliably. The one exception, gpt-oss-20b, received the exact count and answered 0 instead 4 times.
+Nine of the ten models answered all 68 engine questions correctly, and none of the 680 answers rested on a filter that selected the wrong ids. Turning "no less than 244" into `id >= 244` is a task these models do reliably. The one exception, gpt-oss-20b, received the exact count and answered with a different number 14 times, such as 0 where the count was 220.
 
 #### 2. A Tool That Returns Rows Leaves the Model Miscounting
 
-The models wrote correct filters for the rows tool too, and it returned the matching ids. Of the 138 misses, 133 counted the right rows wrong, 3 never called the tool, 2 were proxy errors, and none rested on a wrong filter.
+The models wrote correct filters for the rows tool too, and it returned the matching ids. Of the 136 misses, 131 counted the right rows wrong, 4 never called the tool, 1 gave no readable answer, and none rested on a wrong filter.
 
 | Model | 11 ids | 110 ids | 330 ids |
 |---|---|---|---|
 | Gemini 3.7 Flash | 26/26 | 21/21 | 21/21 |
-| Gemma 4 26B A4B | 26/26 | 21/21 | 21/21 |
 | Gemini 3.8 Flash | 26/26 | 21/21 | 21/21 |
-| gpt-oss-20b | 23/26 | 18/21 | 16/21 |
+| Gemma 4 26B A4B | 26/26 | 21/21 | 20/21 |
+| gpt-oss-20b | 24/26 | 18/21 | 18/21 |
+| Claude Opus 5 | 26/26 | 21/21 | 8/21 |
+| Claude Haiku 4.5 | 26/26 | 21/21 | 6/21 |
 | Claude Sonnet 5 | 26/26 | 21/21 | 6/21 |
-| Claude Opus 5 | 26/26 | 21/21 | 6/21 |
-| Claude Haiku 4.5 | 26/26 | 21/21 | 5/21 |
-| GPT-5.4 mini | 26/26 | 19/21 | 5/21 |
+| GPT-5.4 mini | 26/26 | 20/21 | 2/21 |
 | Gemini 2.5 Flash | 24/26 | 16/21 | 3/21 |
-| GPT-5.4 nano | 26/26 | 4/21 | 0/21 |
+| GPT-5.4 nano | 26/26 | 3/21 | 0/21 |
 
-Eight of the ten models counted all 26 questions about 11 ids correctly, which is the size most quick tests use. The spread opens at 110 ids and is widest at 330, and it does not follow model size: Claude Sonnet 5 and Opus 5 each counted 6 of 330-id lists correctly, Claude Haiku 4.5 counted 5, and Gemma 4 26B, a 26B open-weight model, counted all 21.
+Eight of the ten models counted all 26 questions about 11 ids correctly, which is the size most quick tests use. The spread opens at 110 ids and is widest at 330, and it does not follow model size: Claude Opus 5 counted 8 of 330-id lists correctly, Claude Haiku 4.5 and Sonnet 5 counted 6, and Gemma 4 26B, a 26B open-weight model, counted 20 of 21.
 
 #### 3. Given Python, Most Models Compute, and Two Ways to Still Miss
 
 Eight of the ten models called the Python tool on every question about 110 and 330 ids. Three kinds of miss remain.
 
-- **Skipping the tool.** Gemini 2.5 Flash called it on 1 of 21 questions about 110 ids and none of 21 about 330, answered from reading instead, and scored 37 of 68. It showed the same pattern in two runs of the 1,100-id configuration. gpt-oss-20b skipped the tool on 25 of the 66 questions it answered and miscounted 10 of them.
+- **Skipping the tool.** Gemini 2.5 Flash called it on 1 of 21 questions about 110 ids and none of 21 about 330, answered from reading instead, and scored 37 of 68. It showed the same pattern in two runs of the 1,100-id configuration. gpt-oss-20b skipped the tool on 15 of the 67 questions it answered and miscounted 6 of them.
 - **Code with no output.** GPT-5.4 mini missed 4 questions after running code such as `sum(1 for x in ids if x > 622)` with no `print()`. The tool runs `python -c`, so it returned nothing, and the model answered anyway: 0 where the answer was 190.
-- **Ignoring the output.** gpt-oss-20b missed 5 questions after running code that printed a count, then answered with a different number, such as 123 after `count = sum(1 for x in ids if x >= 30)` and `print(count)`, where the answer was 5. It answered 0 in place of the engine's count 4 times.
+- **Ignoring the output.** gpt-oss-20b missed 5 questions after running code that printed a count, then answered with a different number, such as 0 after `count = sum(1 for x in ids if x >= 683)` and `print(count)`, where the answer was 160. It did the same thing to the engine's count 14 times.
 
 #### 4. A Reasoning Budget Turns Counting Into Guessing
 
@@ -120,7 +120,7 @@ The question to ask of a tool is whether it finishes the arithmetic. Every model
 |---|---|---|---|
 | Who counts | The engine | The model, from the returned rows | The model's code, if it runs any |
 | What went wrong | Quoting a number other than the count | Miscounting the right rows | Skipping the tool, no `print()`, ignoring the output |
-| Models at 68/68 | 9 of 10 | 3 of 10 | 7 of 10 |
+| Models at 68/68 | 9 of 10 | 2 of 10 | 7 of 10 |
 | Answers built on a wrong filter | 0 | 0 | — |
 
 ---
@@ -217,7 +217,7 @@ The goal of this article was to measure whether models count correctly when a to
 The results were:
 
 - 🟢 With a tool that returns the count, 9 of 10 models answered all 68 questions correctly, and no answer rested on a wrong filter.
-- ❌ With a tool that returns the rows, scores ranged from 68 down to 30 of 68; 133 of the 138 misses were miscounts of the correct rows, and at 330 ids Claude Sonnet 5 counted 6 of 21 correctly.
+- ❌ With a tool that returns the rows, scores ranged from 68 down to 29 of 68; 131 of the 136 misses were miscounts of the correct rows, and at 330 ids Claude Sonnet 5 counted 6 of 21 correctly.
 - ⚠️ With Python, 7 of 10 models scored 68 of 68; the misses came from skipping the tool, running code with no `print()`, and answering with a number other than the one printed.
 
 Each of the 10 models ran each task once on Kaggle's model proxy between 2026-09-26 and 2026-09-28, at temperature 0 with output capped at 8,192 tokens. The reasoning-budget result comes from separate runs of Gemini 2.5 Flash and 3.7 Flash on the in-context task with lists up to 1,100 ids.
