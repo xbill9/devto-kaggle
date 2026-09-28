@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.11" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Count It or Compute It: When a Tool Returns Rows, the Models That Count Them Right Spend the Tokens</title>
+  <meta name="description" content="A Kaggle benchmark of the step agents rarely test: counting what a tool returns. Ten models, 68 questions, one tool that returns the count and one that returns the rows. With the count, every model is right at a flat cost. With the rows, models that reason through the list count 330 ids right and spend 6 to 26 times the tokens doing it; models that answer straight away get 0 to 10 of 21." />
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <style>
+    body{font-family:-apple-system,'Segoe UI',Roboto,'Liberation Sans',Arial,sans-serif;
+         font-size:18px;line-height:1.58;max-width:42em;color:#242424;}
+    h1,h2,h3,h4{font-weight:700;line-height:1.25;margin-top:1.8em;}
+    h4{font-size:1.25em;}
+    img{max-width:100%;height:auto;display:block;margin:1.6em 0;}
+    pre{background:#f7f7f7;border:1px solid #e6e6e6;border-radius:4px;
+        padding:12px 14px;overflow-x:auto;font-size:14px;line-height:1.45;}
+    code{font-family:'Liberation Mono',Menlo,Consolas,monospace;}
+    :not(pre)>code{background:#f2f2f2;padding:1px 5px;border-radius:3px;font-size:.9em;}
+    blockquote{border-left:3px solid #ddd;margin-left:0;padding-left:1em;color:#555;}
+    hr{border:0;border-top:1px solid #e6e6e6;margin:2.4em 0;}
+  </style>
+</head>
+<body>
+<p><em>This is a submission for the <a
+href="https://dev.to/challenges/kaggle-2026-09-23">Kaggle Benchmarking
+Challenge</a></em></p>
+<figure><img src="https://raw.githubusercontent.com/xbill9/devto-kaggle/main/article/medium/img/devto-cover.d50932c1.jpg" alt="Count It or Compute It: When a Tool Returns Rows, the Models That Count Them Right Spend the Tokens" /></figure>
+<p>This article reports a Kaggle benchmark for a step every agent
+performs and few people test, counting what a tool returns, and ends
+with a step by step guide to reproducing it.</p>
+<p>An agent's search, database or API tool usually hands back a list of
+records. When the user asks how many, the model does the counting. That
+step passes every quick test with a handful of rows, and nothing flags
+it when it goes wrong: the model sends the right query and quotes a
+confident number.</p>
+<p>This benchmark asks ten models the same 68 counting questions with
+two versions of one tool: <code>count_ids</code> returns the exact
+count, <code>list_ids</code> returns the matching ids.</p>
+<p>With the count, every model but one answered every question about 330
+ids correctly. With the ids, the models split in two. The ones that
+spent 2,700 to 8,200 output tokens per question counted 15 to 21 of 21
+lists correctly. The ones that answered in under 600 tokens counted 0 to
+10.</p>
+<p>The surprise was who landed where: Claude Opus 5, the most expensive
+model in the lineup, answered in 579 tokens and counted 9 of 21. Gemma 4
+26B, a 26B open-weight model, spent 8,153 and counted 20.</p>
+<p><a
+href="https://github.com/xbill9/devto-kaggle">https://github.com/xbill9/devto-kaggle</a></p>
+<p><a
+href="https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it">https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it</a></p>
+<hr />
+<h4 id="what-i-benchmarked">What I Benchmarked</h4>
+<p>The itch is eleven ids:</p>
+<pre class="plaintext"><code>0, 2, 3, 20, 21, 22, 23, 10, 11, 12, 13</code></pre>
+<p>How many are 10 or more? The answer is 8, and every model here gets
+it. Eleven ids say nothing about three hundred, and eleven is about the
+size of the lists most quick tests use.</p>
+<p>Language models' trouble with counting is familiar from examples like
+counting the letters in a word. This benchmark measures it where agents
+meet it: inside tool use, with every miss traced to the query or the
+count, and every answer priced in tokens.</p>
+<p>The benchmark holds everything fixed except who does the
+arithmetic:</p>
+<p><img src="https://raw.githubusercontent.com/xbill9/devto-kaggle/main/article/medium/img/devto-count-it-or-compute-it-table-1.png"
+alt="Table: Task, What the model gets, Who counts" /></p>
+<p>In the first two tasks the ids never appear in the prompt, so the
+only difference is whether the tool returns a number or a list. Both
+tasks check every filter the model sends by the ids it selects, so
+<code>id &gt; 9</code> counts as right for "10 or more", and every wrong
+answer is traced to either a wrong query or a wrong count.</p>
+<p>Each task asks 68 questions: lists of 11, 110 and 330 ids, seven
+phrasings of the threshold ("10 or more", "no less than", "under",
+"between 5 and 9 inclusive" and so on), three seeds each, and the
+original eleven ids five times. Every threshold is an id in the list, so
+<code>&gt;</code> and <code>&gt;=</code> always give different
+answers.</p>
+<hr />
+<h4 id="models-tested">Models Tested</h4>
+<p><img src="https://raw.githubusercontent.com/xbill9/devto-kaggle/main/article/medium/img/devto-count-it-or-compute-it-table-2.png"
+alt="Table: Vendor, Models" /></p>
+<p>The lineup takes a small, a mid-sized and a large model from each
+vendor, plus the open-weight models from Google and OpenAI, so the
+comparison covers price, size and what anyone can run. Each model runs
+with the settings Kaggle's model proxy serves it with. Some of those
+reason before answering and some answer straight away, and that setting
+tracks the result more closely than size or price.</p>
+<p>GPT-6 Astra is refused function tools by the proxy
+(<code>Function tools with reasoning_effort are not supported for gpt-6-astra in /v1/chat/completions</code>).
+Gemini 3.5 Flash-Lite and both Qwen 3 Next 80B models returned
+<code>429</code> or <code>503</code> on most calls.</p>
+<hr />
+<h4 id="findings">Findings</h4>
+<p>At 330 ids, the size where the models separate:</p>
+<p><img src="https://raw.githubusercontent.com/xbill9/devto-kaggle/main/article/medium/img/devto-count-it-or-compute-it-table-3.png"
+alt="Table: Model, Rows tool correct, Output tokens per question, rows tool, Engine correct, Rows-tool cost vs engine" /></p>
+<p>The Claude rows-tool figures come from their 2026-09-25 run, which
+asked the same 68 questions with the same tool; their 2026-09-28
+rows-tool run stopped on the daily quota. Every other figure comes from
+the 2026-09-28 runs.</p>
+<h4
+id="1-with-the-count-in-the-tool-every-model-is-right-at-a-flat-cost">1.
+With the Count in the Tool, Every Model Is Right at a Flat Cost</h4>
+<p>Every model but one answered all 21 engine questions about 330 ids
+correctly, at 35 to 451 output tokens per question, and each model's
+tokens stayed about the same from 11 ids to 330. Turning "no less than
+244" into <code>id &gt;= 244</code> and quoting the number back is
+something every model here does reliably. The exception, gpt-oss-20b,
+answered 5 of 68 engine questions with a number other than the count it
+was given, all of them 0, 1 or 2, and answered once without calling the
+tool.</p>
+<h4 id="2-with-the-rows-quick-tests-pass-and-larger-lists-fail">2. With
+the Rows, Quick Tests Pass and Larger Lists Fail</h4>
+<p>Eight of the ten models counted all 26 questions about 11 ids
+correctly. At 330 ids, five of those eight counted 10 or fewer of 21
+correctly. None of them returned an error or a hedge: each answer was a
+single confident number.</p>
+<h4 id="3-the-models-that-count-right-spend-the-tokens">3. The Models
+That Count Right Spend the Tokens</h4>
+<p>The models split into two groups by how many tokens they spend, and
+model size and price do not predict the split. That was the surprise.
+The models that count correctly spend more tokens as the list grows:
+Gemma 4 26B went from 394 output tokens per question at 11 ids to 8,153
+at 330. The models that miscount spend about the same at every size:
+GPT-5.4 nano spent 35 tokens per question at 11, 110 and 330 ids, which
+leaves no room to count anything. Claude Opus 5, the most expensive
+model here, spent 579 output tokens per question at 330 ids and counted
+9 of 21 correctly; Gemma 4 26B, an open-weight model, spent 8,153 and
+counted 20.</p>
+<p>The same models landed in the same group in every rows-tool run,
+three or four runs per model between 2026-09-25 and 2026-09-28. The
+order inside a group moves by a few questions between runs.</p>
+<p>Counting right by reasoning costs 5 to 19 times what the engine costs
+for the same answer. An earlier run with 1,100 ids in the prompt shows
+the same link from the other side: with output capped at 8,192 tokens,
+Gemini 3.7 Flash counted 1 of 21 lists correctly, against 19 and 15 of
+21 without the cap, and still gave a number every time.</p>
+<h4 id="4-the-query-was-right-every-time">4. The Query Was Right Every
+Time</h4>
+<p>No answer on either task rested on a filter that selected the wrong
+ids. Every miss on the rows tool was the model counting the correct list
+wrong, apart from 3 answers given without calling the tool and 1 that
+could not be read as a number. The failure is in the arithmetic.</p>
+<h4 id="5-python-works-when-the-model-uses-it">5. Python Works When the
+Model Uses It</h4>
+<p>With every id in the prompt and a Python tool available, 7 of 10
+models scored 68 of 68; Gemini 2.5 Flash called the tool on 1 of 42
+questions about 110 and 330 ids and scored 37.</p>
+<h4 id="what-it-changed-about-how-i-think-about-these-models">What It
+Changed About How I Think About These Models</h4>
+<p>In these runs, counting a list was work the model did in tokens, and
+the models that answered straight away had not done it. A tool that
+returns rows moves that work onto the model and makes its accuracy
+depend on a setting the caller may never have looked at. The count
+belongs in the tool: return the count, the minimum and the maximum, and
+every model in this lineup answers correctly at a fraction of the
+tokens.</p>
+<hr />
+<h4 id="compare-and-contrast">Compare and Contrast</h4>
+<p><img src="https://raw.githubusercontent.com/xbill9/devto-kaggle/main/article/medium/img/devto-count-it-or-compute-it-table-4.png"
+alt="Table: Engine, Rows tool, Python tool" /></p>
+<hr />
+<h4 id="so-which-one">So, Which One?</h4>
+<ul>
+<li>🟢 <strong>Engine</strong> — put the count, minimum and maximum in
+the tool. Every model is right at a flat cost.</li>
+<li>⚠️ <strong>Python tool</strong> — reliable when the model uses it,
+prints the result and quotes it.</li>
+<li>❌ <strong>Rows tool</strong> — correct only with a model that
+reasons through the list, at 5 to 19 times the cost per question.</li>
+</ul>
+<hr />
+<h4 id="what-id-measure-next">What I'd Measure Next</h4>
+<ul>
+<li><strong>The same model with reasoning on and off.</strong> Claude
+Opus 5 with extended thinking against its default. The runs here show
+that tokens and accuracy move together across models; this would show
+whether switching reasoning on is enough to fix one model.</li>
+<li><strong>Other arithmetic.</strong> Sums, averages and the largest
+value over returned rows, which the same tool-shape question applies
+to.</li>
+<li><strong>Harder filters.</strong> "At least 10 but under 20" and
+"outside 5 to 9", where a wrong filter with an exact count would show
+up.</li>
+</ul>
+<hr />
+<h4 id="how-to-reproduce-it">How to Reproduce It</h4>
+<p>These steps rebuild the benchmark from the repository; the tasks, the
+runs and every table above come from these commands.</p>
+<hr />
+<h4 id="at-this-point-you-should-have">At This Point You Should
+Have…</h4>
+<ul>
+<li>A Kaggle account, with the Kaggle CLI installed
+(<code>pip install kaggle</code>, version 2.2.4 here) and logged in with
+<code>kaggle auth login</code></li>
+<li>Python 3 for the local checks and the report; the
+<code>kaggle_benchmarks</code> library the tasks import is already
+installed on Kaggle</li>
+<li>The repository cloned:
+<code>git clone https://github.com/xbill9/devto-kaggle</code> and
+<code>cd devto-kaggle</code></li>
+</ul>
+<hr />
+<h4 id="step-1--check-the-questions-locally">Step 1 — Check the
+Questions Locally</h4>
+<p>Every question is generated in code, and its expected count comes
+from running a filter over the ids. <code>check.py</code> builds all 68
+questions with no model calls and no Kaggle library:</p>
+<pre class="shell"><code>python3 tasks/check.py
+ok: 68 rows per task, by size {11: 26, 110: 21, 330: 21}</code></pre>
+<hr />
+<h4 id="step-2--push-each-task">Step 2 — Push Each Task</h4>
+<p>Each file in <code>tasks/</code> is one Kaggle task. The first
+<code>@kbench.task</code> in the file returns the share of questions
+answered correctly, because Kaggle names the task and reads its score
+from the first one it finds. A second task answers one question and runs
+once per question:</p>
+<pre class="python"><code>@kbench.task(name=&quot;count-engine&quot;)
+def count_engine(llm) -&gt; float:
+    runs = count_engine_row.evaluate(
+        llm=[llm], evaluation_data=pd.DataFrame(ROWS), n_jobs=4, on_failure=&quot;continue&quot;)
+    return summarize(runs, len(ROWS), &quot;engine&quot;)</code></pre>
+<p>Each question's result keeps the answer, every filter the model sent,
+and the tokens and cost Kaggle's model proxy reported for it. The push
+slug must match the task name:</p>
+<pre class="shell"><code>kaggle b t push count-engine -f tasks/count_engine.py --wait
+kaggle b t status count-engine
+Task:     count-engine
+Version:  13
+Status:   Completed
+Created:  2026-09-28 16:11:45</code></pre>
+<hr />
+<h4 id="step-3--run-the-models">Step 3 — Run the Models</h4>
+<p><code>kaggle b auth -y</code> fetches the short-lived key for
+Kaggle's model proxy, and <code>kaggle b t models</code> lists the model
+slugs. A run takes one <code>-m</code> per model:</p>
+<pre class="shell"><code>kaggle b t run count-rows-tool -m gemini-2.5-flash -m gemini-3.8-flash -m gemma-4-26b-a4b-it -m gpt-oss-20b -m gpt-5.4-nano-2026-03-17 -m gpt-5.4-mini-2026-03-17 --wait
+All runs completed:
+  gpt-5.4-mini-2026-03-17: COMPLETED
+  gpt-5.4-nano-2026-03-17: COMPLETED
+  gpt-oss-20b: COMPLETED
+  gemma-4-26b-a4b-it: COMPLETED
+  gemini-3.8-flash: COMPLETED
+  gemini-2.5-flash: COMPLETED</code></pre>
+<hr />
+<h4 id="mag_right-tip-cap-the-output-to-stay-inside-the-quota">🔎 Tip:
+Cap the Output to Stay Inside the Quota</h4>
+<p>Kaggle's model proxy reserves the worst-case cost of a call, based on
+the output-token limit, and refuses the call when that exceeds what is
+left of the day's quota. With no limit set, GPT-6 Astra reserved $6.40
+per call and Claude Opus 5 $3.20. Passing a limit keeps the reservation
+to cents:</p>
+<pre class="python"><code>llm.prompt(prompt, schema=int, extra_api_params={&quot;max_completion_tokens&quot;: 8192})</code></pre>
+<hr />
+<h4 id="step-4--download-the-runs-and-build-the-tables">Step 4 —
+Download the Runs and Build the Tables</h4>
+<p><code>report.py</code> builds every table in this article from the
+downloaded runs, including the tokens and cost per question:</p>
+<pre class="shell"><code>for t in count-engine count-rows-tool count-python-tool; do kaggle b t download $t -o results; done
+python3 tasks/report.py results
+| Model | Size | Engine correct | Engine out tokens | Engine $ | Rows correct | Rows out tokens | Rows $ |
+|---|---|---|---|---|---|---|---|
+| Gemini 3.8 Flash | 330 | 21/21 | 140 | 0.0010 | 21/21 | 2,742 | 0.0146 |
+| GPT-5.4 nano | 330 | 21/21 | 35 | 0.0002 | 0/21 | 35 | 0.0003 |</code></pre>
+<hr />
+<h4 id="step-5--group-the-tasks-into-a-benchmark">Step 5 — Group the
+Tasks Into a Benchmark</h4>
+<p>A benchmark is created in the Kaggle web UI. On the benchmark page,
+<strong>Add Tasks</strong> adds the tasks and <strong>Add
+Models</strong> the models. Under <strong>Settings</strong>, set the
+overall score to <em>Average of task scores</em>: the default,
+<em>Percentage of tasks passed</em>, ignores tasks that return a number.
+Setting the visibility to <em>Public</em> is permanent.</p>
+<hr />
+<h4 id="mag_right-tip-the-leaderboard-shows-each-models-latest-run">🔎
+Tip: The Leaderboard Shows Each Model's Latest Run</h4>
+<p>Each leaderboard cell shows the model's most recent run of that task,
+so a run that fails on the quota replaces a complete one before it.
+Check the quota before a run, and rerun the pair if one fails.
+<code>pending.py</code> lists pairs whose latest run is incomplete.</p>
+<hr />
+<h4 id="my-benchmark">My Benchmark</h4>
+<ul>
+<li><a
+href="https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it">https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it</a>
+(the benchmark: the three tasks and their leaderboard)</li>
+<li><a
+href="https://www.kaggle.com/benchmarks/tasks/xbillwork/count-engine">https://www.kaggle.com/benchmarks/tasks/xbillwork/count-engine</a></li>
+<li><a
+href="https://www.kaggle.com/benchmarks/tasks/xbillwork/count-rows-tool">https://www.kaggle.com/benchmarks/tasks/xbillwork/count-rows-tool</a></li>
+<li><a
+href="https://www.kaggle.com/benchmarks/tasks/xbillwork/count-python-tool">https://www.kaggle.com/benchmarks/tasks/xbillwork/count-python-tool</a></li>
+</ul>
+<hr />
+<h4 id="summary">Summary</h4>
+<p>The goal of this article was to measure whether models count
+correctly what their tools return. The key to the solution was changing
+only what the tool returns, a count or a list, and recording every
+filter and every token.</p>
+<p>The results were:</p>
+<ul>
+<li>🟢 With the count in the tool, every model but gpt-oss-20b answered
+all 330-id questions correctly.</li>
+<li>⚠️ With the rows, the models that spent 2,700 to 8,200 output tokens
+per question counted 15 to 21 of 21 lists of 330 correctly.</li>
+<li>❌ The models that answered in under 600 tokens counted 0 to 10 of
+21, Claude Opus 5 among them, with no error to show it.</li>
+</ul>
+<p>Each model ran each task on Kaggle's model proxy with its default
+settings and output capped at 8,192 tokens; the engine and rows-tool
+figures come from runs on 2026-09-28, apart from the Claude rows-tool
+figures from 2026-09-25, the Python-tool figures from 2026-09-28, and
+the token-cap result from earlier in-context runs with lists of 1,100
+ids.</p>
+<p>The strategy for benchmarking counting across 10 models was validated
+with an incremental step by step approach.</p>
+<hr />
+<h4 id="references">References</h4>
+<ul>
+<li>This benchmark's code: <a
+href="https://github.com/xbill9/devto-kaggle">https://github.com/xbill9/devto-kaggle</a></li>
+<li>Kaggle Benchmarking Challenge: <a
+href="https://dev.to/challenges/kaggle-2026-09-23">https://dev.to/challenges/kaggle-2026-09-23</a></li>
+<li>Kaggle Benchmarks: <a
+href="https://www.kaggle.com/benchmarks">https://www.kaggle.com/benchmarks</a></li>
+<li>The tasks are built on Kaggle's <code>kaggle-benchmarks</code>
+library: <a
+href="https://github.com/Kaggle/kaggle-benchmarks">https://github.com/Kaggle/kaggle-benchmarks</a></li>
+<li>Kaggle's benchmark-writing skill, used as the reference for the CLI
+workflow: <a
+href="https://github.com/Kaggle/kaggle-skills/blob/main/write-kaggle-benchmarks/SKILL.md">https://github.com/Kaggle/kaggle-skills/blob/main/write-kaggle-benchmarks/SKILL.md</a></li>
+</ul>
+</body>
+</html>
