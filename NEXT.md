@@ -4,7 +4,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 
 ## Decision
 
-**Runs are complete, the leaderboard shows scores, and the article matches it. Make the benchmark Public, fill the two `PENDING` links, then publish.** Deadline: 2026-10-11, 11:59 PM PDT.
+**Runs are complete, the benchmark is Public, and the article matches the leaderboard. Confirm the benchmark URL loads signed out, fill the two `PENDING` links, then publish.** Deadline: 2026-10-11, 11:59 PM PDT.
 
 ## What exists
 
@@ -12,7 +12,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 |---|---|---|
 | Code | https://github.com/xbill9/devto-kaggle (`main`) | Current, and matches the pushed task versions |
 | Kaggle tasks | `kaggle.com/benchmarks/tasks/xbillwork/count-engine` (v12), `count-rows-tool` (v5), `count-python-tool` (v9) | **Public**, with backing notebooks. `count-python-told` and `count-in-context` exist but stay private and out of the article |
-| Kaggle benchmark | https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it | **Private**. 3 tasks, 10 models added. Leaderboard shows scores |
+| Kaggle benchmark | https://www.kaggle.com/benchmarks/xbillwork/count-it-or-compute-it | **Public** since 2026-09-28 (permanent, Apache 2.0). 3 tasks, 10 models. Overall score: *Average of task scores* |
 | dev.to article | draft id **4744048**, source `article/devto-count-it-or-compute-it.md` | **Unpublished draft**, updated 2026-09-28 with the benchmark link |
 | Cover | `article/devto-cover.d50932c1.jpg` | Done, pushed, referenced by `cover_image:` |
 | Evidence | `article/evidence/` | Text files behind every figure; `report.md` is the table source |
@@ -24,7 +24,7 @@ Everything needed to finish is in this repo. Nothing depends on the machine it w
 - Within the 6-row allowance: gpt-oss-20b has 1 errored Python-tool row. `pending.py` still lists Flash-Lite, the Qwen models and the private tasks; those are outside the lineup.
 - `report.md`, `scores-all-versions.txt`, `python-tool-wrong-answers.txt` and the article are rebuilt from the latest runs. Both `PENDING` lines now hold the benchmark URL; `preflight.py` passes. The dev.to draft is updated with this version (2026-09-28).
 - `check-links.py` warns that the benchmark URL is 404; that is expected while the benchmark is Private, and it must be 200 before publishing.
-- Steps 1–5 are done, and step 7 is done up to publishing. Left: make the benchmark Public (step 6), run `preflight.py --live` and `check-links.py` (benchmark URL must return 200), then `--publish 4744048` on the author's go.
+- Steps 1–6 are done (benchmark Public, overall score switched from *Percentage of tasks passed*, which ignores numeric scores, to *Average of task scores*), and step 7 is done up to publishing. Left: `preflight.py --live` and `check-links.py` (benchmark URL must return 200 signed out), then `--publish 4744048` on the author's go.
 
 ## 2026-09-27
 
